@@ -19,7 +19,7 @@ development of the product.
     - [ ] Nickname and handle separately (see twitter in comparison)
     - [ ] Bio or description
     - [ ] Profile picture
-- [ ] Uploading videos
+- [ ] Uploading and viewing videos
     - [ ] Must have a title, description and an upload time
     - [ ] Commenting to said videos while logged in
     - [ ] Rating said videos
@@ -28,6 +28,7 @@ development of the product.
 - [ ] User profiles showing their videos and details
 
 ### Wanted features, but not neceassarily included in the MVP:
+- [ ] Editing video titles and descriptions after upload
 - [ ] View counters (how to measure a view?)
 - [ ] Rating comments
     - Even though this seems like a simple feature, it can actually take up
