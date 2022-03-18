@@ -22,13 +22,16 @@ development of the product.
 - [ ] Uploading videos
     - [ ] Must have a title, description and an upload time
     - [ ] Commenting to said videos while logged in
-    - [ ] Rating said videos and comments
+    - [ ] Rating said videos
 - [ ] Subscribing to other users
 - [ ] Browsing videos in the front page, including a subbox
 - [ ] User profiles showing their videos and details
 
 ### Wanted features, but not neceassarily included in the MVP:
 - [ ] View counters (how to measure a view?)
+- [ ] Rating comments
+    - Even though this seems like a simple feature, it can actually take up
+      quite a lot of time to implement correctly and efficiently.
 - [ ] Searching for videos
     - This seems like an easy feature, but contains some tricky questions, such
       as which things are considered in the search
