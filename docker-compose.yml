@@ -1,0 +1,17 @@
+version: '3.1'
+volumes:
+  postgresdata:
+
+services:
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: flasktest
+      POSTGRES_PASSWORD: securepassword
+      POSTGRES_DB: filmflask
+      PGDATA: /var/lib/postgresql/data/pgdata
