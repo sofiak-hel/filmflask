@@ -14,7 +14,7 @@ and might use JavaScript, but the minimal viable product it is not necessary.
 This list is viewed as a checklist so that it may be checked along the
 development of the product.
 
-- [ ] Login, logout
+- [X] Login, logout
 - [ ] User details
     - [ ] Nickname and handle separately (see twitter in comparison)
     - [ ] Bio or description
