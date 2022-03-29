@@ -1,16 +1,14 @@
 <html>
 
 <head>
-    <title>Login!</title>
+    <title>Home</title>
 </head>
 
 <body>
-    <form action="" method="post">
-        <label for="username">Username: </label>
-        <input type="text" name="username" id="username">
-        <label for="password">Password: </label>
-        <input type="password" name="password" id="password">
-        <input type="submit" value="Login">
+    <h1>Welcome, {{ user.nickname }}</h1>
+    <p>Logged in as {{ user.handle }} (@{{ user.handle }})</p>
+    <form action="/logout" method="post">
+        <input type="submit" value="Logout">
     </form>
 </body>
 
