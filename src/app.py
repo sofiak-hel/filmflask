@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, request, session
 
 from login import login_bp
-from db import db
+from db import init_db
 
 from auth import User
 
@@ -9,12 +9,9 @@ app = Flask(__name__)
 app.secret_key = "so secret!"
 
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://flasktest:securepassword@localhost/filmflask"
-db.app = app
-db.init_app(app)
 app.register_blueprint(login_bp)
 
-with open("src/sql/init.sql") as file:
-    db.engine.execute(file.read())
+init_db(app)
 
 
 @app.route("/")
