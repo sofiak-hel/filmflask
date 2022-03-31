@@ -4,6 +4,7 @@ from typing import Optional
 from flask_sqlalchemy import SQLAlchemy
 from datetime import time
 from typing import Optional
+from uuid import UUID
 
 from db import db, sql
 
@@ -17,12 +18,20 @@ class User:
         self.expiration: time = row["expiration"]
         self.handle: str = row["handle"]
         self.nickname: str = row["nickname"]
+        self.bio: str = row["bio"]
+        self.avatar_id: UUID = row["avatar_id"]
 
     @staticmethod
-    def from_session(session_id: int) -> Optional['User']:
-        session = find_session_and_user(session_id)
-        if session is not None:
-            return User(session)
+    def from_session(session: dict) -> Optional['User']:
+        session_id = session.get("session_id", None)
+        if session_id is None:
+            return None
+
+        current_session = find_session_and_user(session_id)
+        if current_session is not None:
+            return User(current_session)
+
+        del session["session_id"]
         return None
 
     @staticmethod
@@ -33,12 +42,17 @@ class User:
         return None
 
     @staticmethod
-    def logout(session_id: int):
-        delete_session(session_id)
-
-    @staticmethod
     def register(handle: str, nickname: str, password: str):
         return create_user(handle, nickname, password)
+
+    def logout(self):
+        delete_session(self.session_id)
+
+    def update(self, nickname: Optional[str] = None, bio: Optional[str] = None, avatar_id: Optional[UUID] = None):
+        self.nickname = nickname or self.nickname
+        self.bio = bio or self.bio
+        self.avatar_id = avatar_id or self.avatar_id
+        update_user(self.user_id, self.nickname, self.bio, self.avatar_id)
 
     def __str__(self):
         return "%s (@%s)" % (self.nickname, self.handle)
@@ -62,14 +76,22 @@ def create_user(handle: str, nickname: str, password: str) -> bool:
 def login(handle: str, password: str) -> Optional[dict]:
     try:
         password_hash = hasher.hash(password)
-        result = db.session.execute(
-            sql["find_user_handle"], {"handle": handle})
+        result = db.session.execute(sql["find_user_handle"], {
+            "handle": handle
+        })
         user = result.fetchone()
         if user is None:
             return None
         elif not hasher.verify(user["password_hash"], password):
             return None
         else:
+            if hasher.check_needs_rehash(user["password_hash"]):
+                new_hash = hasher.hash(password)
+                db.session.execute(sql["update_user_password"], {
+                    "password_hash": new_hash,
+                    "user_id": user["user_id"]
+                })
+                db.session.commit()
             return create_session(user["user_id"])
     except Exception as e:
         print(e)
@@ -90,7 +112,7 @@ def create_session(user_id: str) -> Optional[dict]:
         return None
 
 
-def find_session_and_user(session_id: int) -> Optional[dict]:
+def find_session_and_user(session_id: str) -> Optional[dict]:
     try:
         data = {"session_id": session_id}
         db.session.execute(sql["clear_old_sessions"])
@@ -107,9 +129,24 @@ def find_session_and_user(session_id: int) -> Optional[dict]:
         return None
 
 
-def delete_session(session_id) -> bool:
+def delete_session(session_id: str) -> bool:
     try:
         db.session.execute(sql["delete_session"], {"session_id": session_id})
+        db.session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+
+def update_user(user_id: int, nickname: str, bio: str, avatar_id: UUID) -> bool:
+    try:
+        db.session.execute(sql["update_user"], {
+            "user_id": user_id,
+            "nickname": nickname,
+            "bio": bio,
+            "avatar_id": avatar_id
+        })
         db.session.commit()
         return True
     except Exception as e:

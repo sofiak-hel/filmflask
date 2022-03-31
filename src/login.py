@@ -8,53 +8,54 @@ login_bp = Blueprint('login_page', __name__,
                      template_folder='templates')
 
 
-@login_bp.route("/login")
-def login_get():
-    if "session_id" in session:
+@login_bp.route("/login", methods=["GET", "POST"])
+def login():
+    user = User.from_session(session)
+    if request.method == "GET":
+        if user is not None:
+            return redirect("/")
+        return render_template('login.html')
+    elif request.method == "POST":
+        username = request.form.get("username", None)
+        password = request.form.get("password", None)
+        if username is None or password is None:
+            return render("error.html", error="No username of password part")
+        user = User.from_login(username, password)
+        if user is None:
+            return render_template("error.html", error="No such user!")
+        session["session_id"] = user.session_id
         return redirect("/")
-    return render_template('login.html')
 
 
-@login_bp.route("/login", methods=["POST"])
-def login_post():
-    username = request.form["username"]
-    password = request.form["password"]
-    user = User.from_login(username, password)
-    if user is None:
-        return render_template("error.html", error="No such user!")
-    session["session_id"] = user.session_id
-    return redirect("/")
-
-
-@login_bp.route("/register")
-def register_get():
-    if "session_id" in session:
+@login_bp.route("/register", methods=["GET", "POST"])
+def register():
+    user = User.from_session(session)
+    if user is not None:
         return redirect("/")
-    return render_template('register.html')
+    if request.method == "GET":
+        return render_template('register.html')
+    elif request.method == "POST":
+        handle = request.form.get("username", None)
+        nickname = request.form.get("nickname", None)
+        password = request.form.get("password", None)
+        password2 = request.form.get("password2", None)
+        if handle is None or len(handle) > 12:
+            return render_template("error.html", error="Handle is longer than 12 characters")
+        if nickname is None or len(nickname) > 12:
+            return render_template("error.html", error="Nickname is longer than 12 characters")
+        if password is None or password2 is None or password != password2:
+            return render_template("error.html", error="Passwords do not match!")
 
-
-@login_bp.route("/register", methods=["POST"])
-def register_post():
-    handle = request.form["username"]
-    nickname = request.form["nickname"]
-    password = request.form["password"]
-    password2 = request.form["password2"]
-    if len(handle) > 12:
-        return render_template("error.html", error="Handle is longer than 12 characters")
-    if len(nickname) > 12:
-        return render_template("error.html", error="Nickname is longer than 12 characters")
-    if password != password2:
-        return render_template("error.html", error="Passwords do not match!")
-
-    if User.register(handle, nickname, password):
-        return redirect("/")
-    else:
-        return render_template("error.html", error="Failed to create user! Maybe user @%s already exists?" % handle)
+        if User.register(handle, nickname, password):
+            return redirect("/")
+        else:
+            return render_template("error.html", error="Failed to create user! Maybe user @%s already exists?" % handle)
 
 
 @ login_bp.route("/logout", methods=["POST"])
 def logout():
-    if "session_id" in session:
-        User.logout(session["session_id"])
+    user = User.from_session(session)
+    if user is not None:
+        user.logout()
         del session["session_id"]
     return redirect("/")

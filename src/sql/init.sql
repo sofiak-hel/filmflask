@@ -10,18 +10,18 @@ create table if not exists roles (
 );
 select setval('roles_role_id_seq', 2) where not exists (select * from roles);
 insert into roles (
-    role_id, 
-    role_name, 
-    can_delete_users, 
-    can_delete_videos, 
-    can_delete_comments, 
+    role_id,
+    role_name,
+    can_delete_users,
+    can_delete_videos,
+    can_delete_comments,
     can_create_roles) values
     (1, 'admin', TRUE, TRUE, TRUE, TRUE),
     (2, 'user', FALSE, FALSE, FALSE, FALSE)
     on conflict do nothing;
 
 create table if not exists images (
-    image_id serial primary key,
+    image_id uuid primary key default uuid_generate_v4(),
     blob bytea not null,
     content_type text not null
 );
@@ -33,7 +33,7 @@ create table if not exists users (
     nickname text not null,
     password_hash text not null,
     bio text not null default '',
-    avatar_id int,
+    avatar_id uuid,
     deleted boolean not null default FALSE,
     foreign key (avatar_id) references images (image_id) on delete set null,
     foreign key (role_id) references roles (role_id) on delete restrict
@@ -69,7 +69,7 @@ create table if not exists videos (
     content_type text not null,
     title text not null,
     description text not null default '',
-    thumbnail_id int not null,
+    thumbnail_id uuid not null,
     upload_time timestamp not null,
     video_search_en tsvector generated always as (to_tsvector('english', title || ' ' || description)) stored,
     video_search_fi tsvector generated always as (to_tsvector('finnish', title || ' ' || description)) stored,
