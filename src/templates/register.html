@@ -13,7 +13,7 @@
     <form action="" method="post">
         <label for="username">Handle: </label>
         <input type="text" name="username" id="username" minlength="{{ config.HANDLE_MIN_LENGTH }}"
-            maxlength="{{ config.NICKNAME_MIN_LENGTH }}"
+            maxlength="{{ config.HANDLE_MAX_LENGTH }}"
             placeholder="{{ config.HANDLE_MIN_LENGTH }} - {{ config.HANDLE_MAX_LENGTH }} characters"> </br>
         <label for="nickname">What do you want us to call you? </label>
         <input type="text" name="nickname" id="nickname" minlength="{{ config.NICKNAME_MIN_LENGTH }}"

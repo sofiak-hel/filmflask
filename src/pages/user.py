@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, request, session, current_app
 from typing import Optional
 
-from db.users import User
+from db.users import AuthUser
 from db.images import Image
 from util import error
 
@@ -11,7 +11,7 @@ user_bp = Blueprint('user_page', __name__,
 
 @user_bp.route("/user/edit", methods=["GET", "POST"])
 def edit_user():
-    user = User.from_session(session)
+    user = AuthUser.from_session(session)
     if user is None:
         return redirect("/")
 

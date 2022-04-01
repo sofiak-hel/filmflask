@@ -11,34 +11,52 @@ from db.db import db, sql
 hasher = PasswordHasher()
 
 
-class User:
+class BaseUser:
     def __init__(self, row: dict):
         self.user_id: int = row["user_id"]
-        self.session_id: str = row["session_id"]
-        self.expiration: time = row["expiration"]
         self.handle: str = row["handle"]
         self.nickname: str = row["nickname"]
         self.bio: str = row["bio"]
         self.avatar_id: UUID = row["avatar_id"]
 
     @staticmethod
-    def from_session(session: dict) -> Optional['User']:
+    def from_id(user_id: int) -> Optional['BaseUser']:
+        res = find_user(user_id)
+        if res is None:
+            return None
+        return BaseUser(res)
+
+    def update(self, nickname: Optional[str] = None, bio: Optional[str] = None, avatar_id: Optional[UUID] = None):
+        self.nickname = nickname or self.nickname
+        self.bio = self.bio if bio is None else bio
+        self.avatar_id = avatar_id or self.avatar_id
+        return update_user(self.user_id, self.nickname, self.bio, self.avatar_id)
+
+
+class AuthUser(BaseUser):
+    def __init__(self, row: dict):
+        BaseUser.__init__(self, row)
+        self.session_id: str = row["session_id"]
+        self.expiration: time = row["expiration"]
+
+    @staticmethod
+    def from_session(session: dict) -> Optional['AuthUser']:
         session_id = session.get("session_id", None)
         if session_id is None:
             return None
 
         current_session = find_session_and_user(session_id)
         if current_session is not None:
-            return User(current_session)
+            return AuthUser(current_session)
 
         del session["session_id"]
         return None
 
     @staticmethod
-    def from_login(username, password) -> Optional['User']:
+    def from_login(username, password) -> Optional['AuthUser']:
         session = login(username, password)
         if session is not None:
-            return User(session)
+            return AuthUser(session)
         return None
 
     @staticmethod
@@ -47,12 +65,6 @@ class User:
 
     def logout(self):
         delete_session(self.session_id)
-
-    def update(self, nickname: Optional[str] = None, bio: Optional[str] = None, avatar_id: Optional[UUID] = None):
-        self.nickname = nickname or self.nickname
-        self.bio = self.bio if bio is None else bio
-        self.avatar_id = avatar_id or self.avatar_id
-        return update_user(self.user_id, self.nickname, self.bio, self.avatar_id)
 
     def __str__(self):
         return "%s (@%s). Bio: %s, avatar_id: %s." % (self.nickname, self.handle, self.bio, self.avatar_id)
@@ -71,6 +83,17 @@ def create_user(handle: str, nickname: str, password: str) -> bool:
     except Exception as e:
         print(e)
         return False
+
+
+def find_user(user_id: int) -> Optional[dict]:
+    try:
+        result = db.session.execute(sql["find_user"], {
+            "user_id": user_id
+        })
+        return result.fetchone()
+    except Exception as e:
+        print(e)
+        return None
 
 
 def login(handle: str, password: str) -> Optional[dict]:

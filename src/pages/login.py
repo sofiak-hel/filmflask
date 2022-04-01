@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, request, session, current_app
 
-from db.users import User
+from db.users import AuthUser
 from util import error
 
 login_bp = Blueprint('login_page', __name__,
@@ -9,7 +9,7 @@ login_bp = Blueprint('login_page', __name__,
 
 @login_bp.route("/login", methods=["GET", "POST"])
 def login():
-    user = User.from_session(session)
+    user = AuthUser.from_session(session)
     if request.method == "GET":
         if user is not None:
             return redirect("/")
@@ -19,7 +19,7 @@ def login():
         password = request.form.get("password", None)
         if username is None or password is None:
             return error("No username of password part")
-        user = User.from_login(username, password)
+        user = AuthUser.from_login(username, password)
         if user is None:
             return error("No such user!")
         session["session_id"] = user.session_id
@@ -28,7 +28,7 @@ def login():
 
 @login_bp.route("/register", methods=["GET", "POST"])
 def register():
-    user = User.from_session(session)
+    user = AuthUser.from_session(session)
     if user is not None:
         return redirect("/")
     if request.method == "GET":
@@ -45,7 +45,7 @@ def register():
         if password is None or password2 is None or password != password2:
             return error("Passwords do not match!")
 
-        if User.register(handle, nickname, password):
+        if AuthUser.register(handle, nickname, password):
             return redirect("/")
         else:
             return error("Failed to create user! Maybe user @%s already exists?" % handle)
@@ -53,7 +53,7 @@ def register():
 
 @ login_bp.route("/logout", methods=["POST"])
 def logout():
-    user = User.from_session(session)
+    user = AuthUser.from_session(session)
     if user is not None:
         user.logout()
         del session["session_id"]

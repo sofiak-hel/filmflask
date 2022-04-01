@@ -5,6 +5,7 @@ from pages.login import login_bp
 from pages.image import image_bp
 from pages.index import index_bp
 from pages.user import user_bp
+from pages.video import video_bp
 from db.db import init_db
 
 
@@ -23,5 +24,6 @@ app.register_blueprint(login_bp)
 app.register_blueprint(image_bp)
 app.register_blueprint(index_bp)
 app.register_blueprint(user_bp)
+app.register_blueprint(video_bp)
 
 init_db(app)

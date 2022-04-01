@@ -1,5 +1,6 @@
 {
     "create_user": "insert into users (handle, nickname, password_hash) values (:handle, :nickname, :password_hash)",
+    "find_user": "select * from users where user_id = :user_id",
     "find_user_handle": "select * from users where handle = :handle",
     "update_user": "update users set nickname=:nickname, bio=:bio, avatar_id=:avatar_id where user_id=:user_id",
     "update_user_password": "update users set password_hash=:password_hash where user_id=:user_id",
@@ -12,6 +13,9 @@
     "create_image": "insert into images (content_type, blob) values(:content_type, :blob) returning image_id",
     "get_image": "select * from images where image_id = :image_id",
     "delete_image": "delete from images where image_id = :image_id",
-    "create_video": "insert into videos (user_id, blob, content_type, title, description, thumbnail_id) values (:user_id, :blob, :content_type, :title, :description, :thumbnail_id) returning *",
-    "get_video": "select * from videos where video_id = :video_id"
+    "create_video": "insert into videos (user_id, blob, content_type, title, description, thumbnail_id) values (:user_id, :blob, :content_type, :title, :description, :thumbnail_id) returning video_id",
+    "get_video_and_uploader": "select * from videos v left join users u on u.user_id = v.user_id where video_id = :video_id",
+    "all_videos": "select * from videos v left join users u on u.user_id = v.user_id order by v.upload_time desc",
+    "search_videos": "select * from videos v left join users u on u.user_id = v.user_id where video_search_en @@ to_tsquery(:search) or video_search_fi @@ to_tsquery(:search)",
+    "search_videos_substr": "select * from videos v left join users u on u.user_id = v.user_id where lower(v.title) || ' ' || lower(v.description) || ' ' || lower(u.nickname) || ' ' || lower(u.handle) like :search"
 }

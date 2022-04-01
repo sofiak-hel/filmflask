@@ -12,6 +12,25 @@
     <form action="/logout" method="post">
         <input type="submit" value="Logout">
     </form>
+    </br></br>
+    <a href="/upload">Upload video</a>
+    <hr>
+
+
+    <form action="/search" method="get">
+        <input type="text" name="query" id="query"> </br>
+        <input type="submit" value="Search">
+    </form>
+    {% for video in videos %}
+    <div>
+        <img src="/image/{{ video.thumbnail_id }}" width=100>
+        <p><b><a href="/watch/{{ video.video_id }}">{{ video.title }}</a></b></p>
+        <p>By {{ video.uploader.nickname }} (@{{ video.uploader.handle }})</p>
+        <img src="/image/{{ video.uploader.avatar_id }}" width=60>
+        <p>{{ video.upload_time }}</p>
+    </div>
+    <hr>
+    {% endfor %}
 </body>
 
 </html>

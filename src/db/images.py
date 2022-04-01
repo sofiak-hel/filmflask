@@ -19,7 +19,7 @@ class Image:
         self.blob: bytes = blob
 
     @staticmethod
-    def upload(content_type: str, blob: bytes) -> Optional['Image']:
+    def upload(blob: bytes, content_type: str = "image/png") -> Optional['Image']:
         res = create_image(content_type, blob)
         if res is None:
             return None
@@ -52,7 +52,7 @@ def create_image(content_type: str, blob: bytes) -> Optional[dict]:
     try:
         blob = process_image(blob)
         res = db.session.execute(sql["create_image"], {
-            "content_type": "image/png",
+            "content_type": content_type,
             "blob": Binary(blob),
         })
         db.session.commit()
