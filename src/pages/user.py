@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, request, session, current_app
 from typing import Optional
 
-from db.user import User
+from db.users import User
 from db.images import Image
 from util import error
 

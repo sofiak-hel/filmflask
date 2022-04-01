@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, request, session, current_app
 
-from db.user import User
+from db.users import User
 from util import error
 
 login_bp = Blueprint('login_page', __name__,

@@ -70,7 +70,7 @@ create table if not exists videos (
     title text not null,
     description text not null default '',
     thumbnail_id uuid not null,
-    upload_time timestamp not null,
+    upload_time timestamp not null default now(),
     video_search_en tsvector generated always as (to_tsvector('english', title || ' ' || description)) stored,
     video_search_fi tsvector generated always as (to_tsvector('finnish', title || ' ' || description)) stored,
     foreign key (user_id) references users (user_id) on delete cascade,

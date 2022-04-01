@@ -1,6 +1,6 @@
 from flask import Blueprint, session, render_template, redirect
 
-from db.user import User
+from db.users import User
 
 index_bp = Blueprint('home_page', __name__,
                      template_folder='templates')

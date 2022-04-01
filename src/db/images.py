@@ -1,5 +1,5 @@
 
-from io import BytesIO
+from io import BytesIO, IOBase
 from argon2 import PasswordHasher
 from typing import Optional
 from flask_sqlalchemy import SQLAlchemy
@@ -9,20 +9,21 @@ from psycopg2 import Binary
 from uuid import UUID
 
 from db.db import db, sql
+from util import process_image
 
 
 class Image:
-    def __init__(self, id: UUID, content_type: str, blob: BytesIO):
-        self.image_id = id
-        self.content_type = content_type
-        self.blob = blob
+    def __init__(self, id: UUID, content_type: str, blob: bytes):
+        self.image_id: UUID = id
+        self.content_type: str = content_type
+        self.blob: bytes = blob
 
     @staticmethod
     def upload(content_type: str, blob: bytes) -> Optional['Image']:
-        res = create_image(content_type, Binary(blob))
+        res = create_image(content_type, blob)
         if res is None:
             return None
-        return Image(res["image_id"], content_type, BytesIO(blob))
+        return Image(res["image_id"], content_type, blob)
 
     @staticmethod
     def from_id(image_id: str | UUID) -> Optional['Image']:
@@ -37,18 +38,22 @@ class Image:
             return None
         content_type = res["content_type"]
         blob = res["blob"]
-        return Image(image_id, content_type, BytesIO(blob))
+        return Image(image_id, content_type, blob)
 
     @staticmethod
     def delete(image_id) -> bool:
         return delete_image(image_id)
 
+    def getBuffer(self) -> IOBase:
+        return BytesIO(self.blob)
 
-def create_image(content_type: str, blob: Binary) -> Optional[dict]:
+
+def create_image(content_type: str, blob: bytes) -> Optional[dict]:
     try:
+        blob = process_image(blob)
         res = db.session.execute(sql["create_image"], {
-            "content_type": content_type,
-            "blob": blob,
+            "content_type": "image/png",
+            "blob": Binary(blob),
         })
         db.session.commit()
         return res.fetchone()

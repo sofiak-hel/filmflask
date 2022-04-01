@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, request, session, send_file, current_app
 
-from db.user import User
+from db.users import User
 from db.images import Image
 from util import error
 
@@ -35,4 +35,4 @@ def image_get(image_id):
     if image is None:
         return "Failed to get image!"
     else:
-        return send_file(image.blob, image.content_type)
+        return send_file(image.getBuffer(), image.content_type)

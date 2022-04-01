@@ -11,5 +11,7 @@
     "delete_session": "delete from sessions where session_id = :session_id",
     "create_image": "insert into images (content_type, blob) values(:content_type, :blob) returning image_id",
     "get_image": "select * from images where image_id = :image_id",
-    "delete_image": "delete from images where image_id = :image_id"
+    "delete_image": "delete from images where image_id = :image_id",
+    "create_video": "insert into videos (user_id, blob, content_type, title, description, thumbnail_id) values (:user_id, :blob, :content_type, :title, :description, :thumbnail_id) returning *",
+    "get_video": "select * from videos where video_id = :video_id"
 }
