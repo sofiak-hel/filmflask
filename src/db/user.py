@@ -6,7 +6,7 @@ from datetime import time
 from typing import Optional
 from uuid import UUID
 
-from db import db, sql
+from db.db import db, sql
 
 hasher = PasswordHasher()
 
@@ -50,12 +50,12 @@ class User:
 
     def update(self, nickname: Optional[str] = None, bio: Optional[str] = None, avatar_id: Optional[UUID] = None):
         self.nickname = nickname or self.nickname
-        self.bio = bio or self.bio
+        self.bio = self.bio if bio is None else bio
         self.avatar_id = avatar_id or self.avatar_id
-        update_user(self.user_id, self.nickname, self.bio, self.avatar_id)
+        return update_user(self.user_id, self.nickname, self.bio, self.avatar_id)
 
     def __str__(self):
-        return "%s (@%s)" % (self.nickname, self.handle)
+        return "%s (@%s). Bio: %s, avatar_id: %s." % (self.nickname, self.handle, self.bio, self.avatar_id)
 
 
 def create_user(handle: str, nickname: str, password: str) -> bool:

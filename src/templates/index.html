@@ -7,8 +7,8 @@
 <body>
     <h1>Welcome, {{ user.nickname }}</h1>
     <p>Logged in as {{ user.handle }} (@{{ user.handle }})</p>
-    <img src="/image/{{ user.avatar_id }}">
-    <a href="/upload">upload</a>
+    <img src="/image/{{ user.avatar_id }}" width=250>
+    <a href="/user/edit">Edit user info</a>
     <form action="/logout" method="post">
         <input type="submit" value="Logout">
     </form>

@@ -8,7 +8,7 @@ from typing import Optional
 from psycopg2 import Binary
 from uuid import UUID
 
-from db import db, sql
+from db.db import db, sql
 
 
 class Image:

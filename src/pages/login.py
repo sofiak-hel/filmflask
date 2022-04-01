@@ -1,8 +1,7 @@
-from flask import Flask, Blueprint, render_template, redirect, request, session
-from flask_sqlalchemy import SQLAlchemy
-import json
+from flask import Blueprint, render_template, redirect, request, session, current_app
 
-from auth import User
+from db.user import User
+from util import error
 
 login_bp = Blueprint('login_page', __name__,
                      template_folder='templates')
@@ -19,10 +18,10 @@ def login():
         username = request.form.get("username", None)
         password = request.form.get("password", None)
         if username is None or password is None:
-            return render("error.html", error="No username of password part")
+            return error("No username of password part")
         user = User.from_login(username, password)
         if user is None:
-            return render_template("error.html", error="No such user!")
+            return error("No such user!")
         session["session_id"] = user.session_id
         return redirect("/")
 
@@ -33,23 +32,23 @@ def register():
     if user is not None:
         return redirect("/")
     if request.method == "GET":
-        return render_template('register.html')
+        return render_template('register.html', config=current_app.config)
     elif request.method == "POST":
         handle = request.form.get("username", None)
         nickname = request.form.get("nickname", None)
         password = request.form.get("password", None)
         password2 = request.form.get("password2", None)
-        if handle is None or len(handle) > 12:
-            return render_template("error.html", error="Handle is longer than 12 characters")
-        if nickname is None or len(nickname) > 12:
-            return render_template("error.html", error="Nickname is longer than 12 characters")
+        if handle is None or len(handle) > current_app.config["HANDLE_MAX_LENGTH"]:
+            return error("Handle is longer than 12 characters")
+        if nickname is None or len(nickname) > current_app.config["NICKNAME_MAX_LENGTH"]:
+            return error("Nickname is longer than 12 characters")
         if password is None or password2 is None or password != password2:
-            return render_template("error.html", error="Passwords do not match!")
+            return error("Passwords do not match!")
 
         if User.register(handle, nickname, password):
             return redirect("/")
         else:
-            return render_template("error.html", error="Failed to create user! Maybe user @%s already exists?" % handle)
+            return error("Failed to create user! Maybe user @%s already exists?" % handle)
 
 
 @ login_bp.route("/logout", methods=["POST"])

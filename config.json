@@ -1,0 +1,16 @@
+{
+    "SECRET_KEY": "some secret!",
+    "PG_HOST": "localhost",
+    "PG_PORT": 5432,
+    "PG_USER": "flasktest",
+    "PG_PASS": "securepassword",
+    "PG_DB": "filmflask",
+    "PSQL_URL": "postgresql://flasktest:securepassword@localhost/filmflask",
+    "MAX_CONTENT_LENGTH": 5242880,
+    "HANDLE_MAX_LENGTH": 12,
+    "HANDLE_MIN_LENGTH": 3,
+    "NICKNAME_MAX_LENGTH": 12,
+    "NICKNAME_MIN_LENGTH": 1,
+    "BIO_MAX_LENGTH": 100,
+    "MAX_IMAGE_SIZE": 204800
+}
