@@ -19,12 +19,13 @@ development of the product.
     - [ ] Nickname and handle separately (see twitter in comparison)
     - [ ] Bio or description
     - [ ] Profile picture
-- [ ] Uploading and viewing videos
-    - [ ] Must have a title, description and an upload time
+- [X] Uploading and viewing videos
+    - [X] Must have a title, description and an upload time
     - [ ] Commenting to said videos while logged in
     - [ ] Rating said videos
 - [ ] Subscribing to other users
-- [ ] Browsing videos in the front page, including a subbox
+- [X] Browsing videos in the front page
+  - [ ] including a subbox
 - [ ] User profiles showing their videos and details
 
 ### Wanted features, but not neceassarily included in the MVP:
@@ -33,7 +34,7 @@ development of the product.
 - [ ] Rating comments
     - Even though this seems like a simple feature, it can actually take up
       quite a lot of time to implement correctly and efficiently.
-- [ ] Searching for videos
+- [X] Searching for videos
     - This seems like an easy feature, but contains some tricky questions, such
       as which things are considered in the search
 - [ ] Playlists
