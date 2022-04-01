@@ -15,17 +15,17 @@ This list is viewed as a checklist so that it may be checked along the
 development of the product.
 
 - [X] Login, logout
-- [ ] User details
-    - [ ] Nickname and handle separately (see twitter in comparison)
-    - [ ] Bio or description
-    - [ ] Profile picture
+- [X] User details
+    - [X] Nickname and handle separately (see twitter in comparison)
+    - [X] Bio or description
+    - [X] Profile picture
 - [X] Uploading and viewing videos
     - [X] Must have a title, description and an upload time
     - [ ] Commenting to said videos while logged in
     - [ ] Rating said videos
 - [ ] Subscribing to other users
 - [X] Browsing videos in the front page
-  - [ ] including a subbox
+  - [ ] Including a subbox
 - [ ] User profiles showing their videos and details
 
 ### Wanted features, but not neceassarily included in the MVP:
