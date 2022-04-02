@@ -15,18 +15,52 @@ from db.images import Image
 from util import process_video, create_thumbnail
 
 
-class Video:
+class VideoListing:
     def __init__(self, row: dict):
         self.video_id: UUID = row["video_id"]
         self.user_id: int = row["user_id"]
         self.content_type: str = row["content_type"]
-        self.blob: bytes = row["blob"]
         self.title: str = row["title"]
         self.description: str = row["description"]
         self.thumbnail_id: UUID = row["thumbnail_id"]
         self.upload_time: time = row["upload_time"]
         self.download_counter: int = row["download_counter"]
         self.uploader: BaseUser = BaseUser(row)
+
+    @staticmethod
+    def search(search: Optional[str] = None) -> list['VideoListing']:
+        if search is not None:
+            res = search_videos(search)
+        else:
+            res = all_videos()
+
+        if res is None:
+            return []
+        videos = []
+        for row in res:
+            videos.append(VideoListing(row))
+        return videos
+
+    @staticmethod
+    def by_uploaders(uploader_ids: list[int]) -> list['VideoListing']:
+        res = get_videos(uploader_ids)
+
+        if res is None:
+            return []
+        videos = []
+        for row in res:
+            videos.append(VideoListing(row))
+        return videos
+
+    def add_download(self) -> bool:
+        self.download_counter += 1
+        return add_download(self.video_id)
+
+
+class Video(VideoListing):
+    def __init__(self, row: dict):
+        VideoListing.__init__(self, row)
+        self.blob: bytes = row["blob"]
 
     @staticmethod
     def upload(user: AuthUser, title: str, description: str, blob: bytes) -> Optional['Image']:
@@ -55,41 +89,12 @@ class Video:
         return Video(res)
 
     @staticmethod
-    def search(search: Optional[str] = None) -> list['Video']:
-        if search is not None:
-            res = search_videos(search)
-        else:
-            res = all_videos()
-
-        if res is None:
-            return []
-        videos = []
-        for row in res:
-            videos.append(Video(row))
-        return videos
-
-    @staticmethod
-    def by_uploaders(uploader_ids: list[int]) -> list['Video']:
-        res = get_videos(uploader_ids)
-
-        if res is None:
-            return []
-        videos = []
-        for row in res:
-            videos.append(Video(row))
-        return videos
-
-    @staticmethod
     def reprocess_all():
         videos = Video.search()
 
         for video in videos:
             new_blob = process_video(video.blob)
             update_video(video.video_id, new_blob)
-
-    def add_download(self) -> bool:
-        self.download_counter += 1
-        return add_download(self.video_id)
 
     def getBuffer(self) -> IOBase:
         return BytesIO(self.blob)
