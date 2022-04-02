@@ -79,6 +79,14 @@ class Video:
             videos.append(Video(row))
         return videos
 
+    @staticmethod
+    def reprocess_all():
+        videos = Video.search()
+
+        for video in videos:
+            new_blob = process_video(video.blob)
+            update_video(video.video_id, new_blob)
+
     def add_download(self) -> bool:
         self.download_counter += 1
         return add_download(self.video_id)
@@ -151,6 +159,19 @@ def add_download(video_id: UUID) -> bool:
     try:
         res = db.session.execute(sql["inc_video_counter"], {
             "video_id": video_id,
+        })
+        db.session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+
+def update_video(video_id: UUID, blob: bytes) -> bool:
+    try:
+        res = db.session.execute(sql["update_video"], {
+            "video_id": video_id,
+            "blob": blob
         })
         db.session.commit()
         return True

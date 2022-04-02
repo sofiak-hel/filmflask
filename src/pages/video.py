@@ -53,3 +53,10 @@ def watch(video_id):
         return "Failed to get video or uploader!"
     else:
         return render_template("watch.html", video=video)
+
+
+# Enable for reprocessing
+# @video_bp.route("/reprocess")
+# def reprocess():
+#     Video.reprocess_all()
+#     return "Reprocessed!"

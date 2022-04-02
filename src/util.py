@@ -33,10 +33,31 @@ def process_video(blob: bytes):
     ouf = tempfile.NamedTemporaryFile()
     inf.write(blob)
 
+    data = ffmpeg.probe(inf.name)
+    available_streams = [False, False]
+    if 'streams' in data:
+        for stream in data['streams']:
+            print(stream['codec_type'])
+            if 'codec_type' in stream:
+                if stream['codec_type'] == 'audio':
+                    available_streams[0] = True
+                if stream['codec_type'] == 'video':
+                    available_streams[1] = True
+
+    input = ffmpeg.input(inf.name)
+    streams = []
+    if available_streams[0]:
+        streams.append(input.audio)
+    if available_streams[1]:
+        streams.append(
+            input.video
+            .filter_('scale', w="if(gt(ih,iw),-1,min(iw,854))", h="if(gt(ih,iw),min(ih,480),-1)", force_original_aspect_ratio='decrease')
+            .filter_('pad', "if(gt(iw,ih),iw+1,ceil(ih*(16/9)/2)*2)", "if(gt(ih,iw),ih+1,ceil(iw*(9/16)/2)*2)", "-1", "-1")
+        )
     process = (
-        ffmpeg
-        .input(inf.name)
-        .output(ouf.name, format="mp4")
+        ffmpeg.output(*streams,
+                      ouf.name,
+                      format="mp4")
         .overwrite_output()
         .run_async(pipe_stdout=True)
     )
