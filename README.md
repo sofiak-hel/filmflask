@@ -26,11 +26,11 @@ development of the product.
 - [ ] Subscribing to other users
 - [X] Browsing videos in the front page
   - [ ] Including a subbox
-- [ ] User profiles showing their videos and details
+- [X] User profiles showing their videos and details
 
 ### Wanted features, but not neceassarily included in the MVP:
 - [ ] Editing video titles and descriptions after upload
-- [ ] View counters (how to measure a view?)
+- [X] View counters (how to measure a view?)
 - [ ] Rating comments
     - Even though this seems like a simple feature, it can actually take up
       quite a lot of time to implement correctly and efficiently.
