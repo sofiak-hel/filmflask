@@ -52,6 +52,17 @@ class VideoListing:
             videos.append(VideoListing(row))
         return videos
 
+    @staticmethod
+    def subbox(user_id: int) -> list['VideoListing']:
+        res = get_subbox(user_id)
+        videos: list['VideoListing'] = []
+        if res is None:
+            return videos
+
+        for row in res:
+            videos.append(VideoListing(row))
+        return videos
+
     def add_download(self) -> bool:
         self.download_counter += 1
         return add_download(self.video_id)
@@ -183,3 +194,16 @@ def update_video(video_id: UUID, blob: bytes) -> bool:
     except Exception as e:
         print(e)
         return False
+
+
+def get_subbox(user_id: int) -> Optional[list[dict]]:
+    try:
+        res = db.session.execute(sql["get_subbox"], {
+            "user_id": user_id,
+        })
+        if res is None:
+            return None
+        return res.fetchall()
+    except Exception as e:
+        print(e)
+        return None

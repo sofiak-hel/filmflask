@@ -20,6 +20,28 @@ def user(handle):
     return render_template("user.html", user=user, me=me, videos=videos)
 
 
+@user_bp.route("/subscribe/<handle>", methods=["POST"])
+@csrf_token_required()
+@auth_required()
+def subscribe(handle):
+    me = AuthUser.from_session(session)
+    user = BaseUser.from_handle(handle)
+    if not me.subscribe(user.user_id):
+        return error("Failed to subscribe to %s!" % handle)
+    return redirect("/user/%s" % handle)
+
+
+@user_bp.route("/unsubscribe/<handle>", methods=["POST"])
+@csrf_token_required()
+@auth_required()
+def unsubscribe(handle):
+    me = AuthUser.from_session(session)
+    user = BaseUser.from_handle(handle)
+    if not me.unsubscribe(user.user_id):
+        return error("Failed to unsubscribe to %s!" % handle)
+    return redirect("/user/%s" % handle)
+
+
 @user_bp.route("/user/edit", methods=["GET", "POST"])
 @csrf_token_required()
 @auth_required()

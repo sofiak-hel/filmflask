@@ -34,9 +34,9 @@ development of the product.
     - [X] Must have a title, description and an upload time
     - [ ] Commenting to said videos while logged in
     - [ ] Rating said videos
-- [ ] Subscribing to other users
+- [X] Subscribing to other users
 - [X] Browsing videos in the front page
-  - [ ] Including a subbox
+  - [X] Including a subbox
 - [X] User profiles showing their videos and details
 
 ### Wanted features, but not neceassarily included in the MVP:

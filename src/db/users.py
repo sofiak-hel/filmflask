@@ -39,6 +39,16 @@ class BaseUser:
         self.avatar_id = avatar_id or self.avatar_id
         return update_user(self.user_id, self.nickname, self.bio, self.avatar_id)
 
+    def list_subscriptions(self) -> list[int]:
+        res = list_subscriptions(self.user_id)
+        subs: list[int] = []
+        if res is None:
+            return subs
+
+        for row in res:
+            subs.append(row["subscribed_id"])
+        return subs
+
 
 class AuthUser(BaseUser):
     def __init__(self, row: dict):
@@ -78,6 +88,15 @@ class AuthUser(BaseUser):
 
     def logout(self):
         delete_session(self.session_id)
+
+    def subscribe(self, other_id: int) -> bool:
+        return subscribe(self.user_id, other_id)
+
+    def unsubscribe(self, other_id: int) -> bool:
+        return unsubscribe(self.user_id, other_id)
+
+    def check_subscription(self, other_id: int) -> bool:
+        return check_subscription(self.user_id, other_id)
 
     def __str__(self):
         return "%s (@%s). Bio: %s, avatar_id: %s." % (self.nickname, self.handle, self.bio, self.avatar_id)
@@ -217,3 +236,56 @@ def clear_old_sessions():
     except Exception as e:
         print(e)
         return None
+
+
+def subscribe(user_id: int, subscribed_id: int) -> bool:
+    try:
+        db.session.execute(sql["subscribe"], {
+            "user_id": user_id,
+            "subscribed_id": subscribed_id
+        })
+        db.session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+
+def unsubscribe(user_id: int, subscribed_id: int) -> bool:
+    try:
+        db.session.execute(sql["unsubscribe"], {
+            "user_id": user_id,
+            "subscribed_id": subscribed_id
+        })
+        db.session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+
+def list_subscriptions(user_id: int) -> Optional[list[dict]]:
+    try:
+        res = db.session.execute(sql["list_subscriptions"], {
+            "user_id": user_id,
+        })
+        if res is None:
+            return None
+        return res.fetchone()
+    except Exception as e:
+        print(e)
+        return None
+
+
+def check_subscription(user_id: int, subscribed_id: int) -> bool:
+    try:
+        res = db.session.execute(sql["check_subscription"], {
+            "user_id": user_id,
+            "subscribed_id": subscribed_id
+        })
+        if res is None:
+            return False
+        return res.fetchone() is not None
+    except Exception as e:
+        print(e)
+        return False

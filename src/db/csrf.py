@@ -37,14 +37,11 @@ class CSRFToken:
     def validate_request(request, session: dict) -> bool:
         uuid: UUID = request.form.get("csrf_token", None)
         session_id = session.get("session_id", None)
-        print(uuid)
-        print(session_id)
         if uuid is None or session_id is None:
             return False
         csrf_token = CSRFToken.from_csrf(uuid)
         if csrf_token is None:
             return False
-        print(csrf_token)
         return csrf_token.session_id == session_id
 
 
