@@ -44,6 +44,8 @@ def register():
             return error("Nickname is longer than 12 characters")
         if password is None or password2 is None or password != password2:
             return error("Passwords do not match!")
+        if not handle.isalnum() and handle.isascii():
+            return error("Handle must only contain numbers and characters from a to z!")
 
         if AuthUser.register(handle, nickname, password):
             return redirect("/")

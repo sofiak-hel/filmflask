@@ -26,6 +26,13 @@ class BaseUser:
             return None
         return BaseUser(res)
 
+    @staticmethod
+    def from_handle(handle: str) -> Optional['BaseUser']:
+        res = find_user_by_handle(handle)
+        if res is None:
+            return None
+        return BaseUser(res)
+
     def update(self, nickname: Optional[str] = None, bio: Optional[str] = None, avatar_id: Optional[UUID] = None):
         self.nickname = nickname or self.nickname
         self.bio = self.bio if bio is None else bio
@@ -96,13 +103,21 @@ def find_user(user_id: int) -> Optional[dict]:
         return None
 
 
-def login(handle: str, password: str) -> Optional[dict]:
+def find_user_by_handle(handle: str) -> Optional[dict]:
     try:
-        password_hash = hasher.hash(password)
         result = db.session.execute(sql["find_user_handle"], {
             "handle": handle
         })
-        user = result.fetchone()
+        return result.fetchone()
+    except Exception as e:
+        print(e)
+        return None
+
+
+def login(handle: str, password: str) -> Optional[dict]:
+    try:
+        password_hash = hasher.hash(password)
+        user = find_user_by_handle(handle)
         if user is None:
             return None
         elif not hasher.verify(user["password_hash"], password):

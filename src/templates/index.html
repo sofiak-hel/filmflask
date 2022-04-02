@@ -5,15 +5,16 @@
 </head>
 
 <body>
-    <h1>Welcome, {{ user.nickname }}</h1>
-    <p>Logged in as {{ user.handle }} (@{{ user.handle }})</p>
-    <img src="/image/{{ user.avatar_id }}" width=250>
-    <a href="/user/edit">Edit user info</a>
+    {% if me %}
+    <h1>Welcome, <a href="/user/{{ me.handle }}">{{ me.nickname }}</a></h1>
     <form action="/logout" method="post">
         <input type="submit" value="Logout">
     </form>
     </br></br>
     <a href="/upload">Upload video</a>
+    {% else %}
+    <a href="/login">Log in</a>
+    {% endif %}
     <hr>
 
 
@@ -25,7 +26,8 @@
     <div>
         <img src="/image/{{ video.thumbnail_id }}" width=100>
         <p><b><a href="/watch/{{ video.video_id }}">{{ video.title }}</a></b></p>
-        <p>By {{ video.uploader.nickname }} (@{{ video.uploader.handle }})</p>
+        <p>By <a href="/user/{{ video.uploader.handle }}">{{ video.uploader.nickname }} (@{{ video.uploader.handle
+                }})</a></p>
         <img src="/image/{{ video.uploader.avatar_id }}" width=60>
         <p>{{ video.upload_time }}</p>
     </div>

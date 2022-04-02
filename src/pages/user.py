@@ -1,12 +1,23 @@
 from flask import Blueprint, render_template, redirect, request, session, current_app
 from typing import Optional
 
-from db.users import AuthUser
+from db.users import BaseUser, AuthUser
 from db.images import Image
+from db.videos import Video
 from util import error
 
 user_bp = Blueprint('user_page', __name__,
                     template_folder='templates')
+
+
+@user_bp.route("/user/<handle>")
+def user(handle):
+    me = AuthUser.from_session(session)
+    user = BaseUser.from_handle(handle)
+    videos = Video.by_uploaders([user.user_id])
+    if user is None:
+        return error("No such user!")
+    return render_template("user.html", user=user, me=me, videos=videos)
 
 
 @user_bp.route("/user/edit", methods=["GET", "POST"])
@@ -16,7 +27,7 @@ def edit_user():
         return redirect("/")
 
     if request.method == "GET":
-        return render_template("user_edit.html", user=user, config=current_app.config)
+        return render_template("user_edit.html", me=user, config=current_app.config)
 
     elif request.method == "POST":
         nickname: str = request.form.get("nickname", "").strip()

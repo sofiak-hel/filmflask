@@ -67,6 +67,17 @@ class Video:
             videos.append(Video(row))
         return videos
 
+    @staticmethod
+    def by_uploaders(uploader_ids: list[int]) -> list['Video']:
+        res = get_videos(uploader_ids)
+
+        if res is None:
+            return []
+        videos = []
+        for row in res:
+            videos.append(Video(row))
+        return videos
+
     def getBuffer(self) -> IOBase:
         return BytesIO(self.blob)
 
@@ -92,6 +103,16 @@ def create_video(user_id: int, title: str, description: str, blob: bytes, conten
 def all_videos() -> Optional[list[dict]]:
     try:
         return db.session.execute(sql["all_videos"]).fetchall()
+    except Exception as e:
+        print(e)
+        return None
+
+
+def get_videos(uploader_ids: list[int]) -> Optional[list[dict]]:
+    try:
+        return db.session.execute(sql["get_videos_by_uploader"], {
+            "user_ids": tuple(uploader_ids)
+        }).fetchall()
     except Exception as e:
         print(e)
         return None

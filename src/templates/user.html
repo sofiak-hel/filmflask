@@ -1,0 +1,29 @@
+<html>
+
+<head>
+    <title>{{ user.nickname }}</title>
+</head>
+
+<body>
+    <p><a href="/">Back to homepage</a></p>
+    <hr>
+    <h1>{{ user.handle }} (@{{ user.handle }})</h1>
+    <img src="/image/{{ user.avatar_id }}" width=250>
+    <p>{{ user.bio }}</p>
+    {% if me.user_id == user.user_id %}
+    <a href="/user/edit">Edit user info</a>
+    {% endif %}
+    </br></br>
+    <hr>
+
+    {% for video in videos %}
+    <div>
+        <img src="/image/{{ video.thumbnail_id }}" width=100>
+        <p><b><a href="/watch/{{ video.video_id }}">{{ video.title }}</a></b></p>
+        <p>{{ video.upload_time }}</p>
+    </div>
+    <hr>
+    {% endfor %}
+</body>
+
+</html>

@@ -5,18 +5,18 @@
 </head>
 
 <body>
-    <h1>Edit user info for @{{ user.handle }}</h1>
+    <h1>Edit user info for @{{ me.handle }}</h1>
     <form action="/user/edit" method="post" enctype="multipart/form-data">
         <label for="nickname">Update nickname: </label>
-        <input type="text" name="nickname" id="nickname" value="{{ user.nickname }}" placeholder="{{ user.nickname }}"
+        <input type="text" name="nickname" id="nickname" value="{{ me.nickname }}" placeholder="{{ me.nickname }}"
             minlength="{{ config.NICKNAME_MIN_LENGTH }}" maxlength="{{ config.NICKNAME_MAX_LENGTH }}"></br></br>
         <label for="bio">Update bio: </label></br>
-        <textarea name="bio" id="bio" maxlength="{{ config.BIO_MAX_LENGTH }}">{{ user.bio }}</textarea></br></br>
+        <textarea name="bio" id="bio" maxlength="{{ config.BIO_MAX_LENGTH }}">{{ me.bio }}</textarea></br></br>
         <input type="submit" value="Update">
     </form>
 
-    {% if user.avatar_id %}
-    <p><img src="/image/{{ user.avatar_id }}" width=250></p>
+    {% if me.avatar_id %}
+    <p><img src="/image/{{ me.avatar_id }}" width=250></p>
     {% else %}
     <p>No avatar set.</p>
     {% endif %}
