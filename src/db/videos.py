@@ -169,7 +169,7 @@ def add_download(video_id: UUID) -> bool:
 
 def update_video(video_id: UUID, blob: bytes) -> bool:
     try:
-        res = db.session.execute(sql["update_video"], {
+        res = db.session.execute(sql["reupload_video"], {
             "video_id": video_id,
             "blob": blob
         })

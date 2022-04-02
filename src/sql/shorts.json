@@ -23,5 +23,5 @@
     "create_csrf_token": "insert into csrf_tokens (session_id) values (:session_id) returning *",
     "clear_csrf_tokens": "delete from csrf_tokens where expiration <= now()",
     "get_csrf_token": "select * from csrf_tokens where csrf_token = :csrf_token and expiration > now()",
-    "update_video": "update videos set blob = :blob where video_id = :video_id"
+    "reupload_video": "update videos set blob = :blob where video_id = :video_id"
 }

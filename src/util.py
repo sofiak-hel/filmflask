@@ -51,7 +51,9 @@ def process_video(blob: bytes):
     if available_streams[1]:
         streams.append(
             input.video
+            # Scales down the video so it is 480p or smaller
             .filter_('scale', w="if(gt(ih,iw),-1,min(iw,854))", h="if(gt(ih,iw),min(ih,480),-1)", force_original_aspect_ratio='decrease')
+            # Pads the video with black bars, so every video will end up as 16:9 aspect ratio
             .filter_('pad', "if(gt(iw,ih),iw+1,ceil(ih*(16/9)/2)*2)", "if(gt(ih,iw),ih+1,ceil(iw*(9/16)/2)*2)", "-1", "-1")
         )
     process = (

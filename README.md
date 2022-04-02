@@ -6,6 +6,17 @@ University course [Tietokantasovellus](https://hy-tsoha.github.io/materiaali/).
 FilmFlask aims to be quite similar to [YouTube](https://www.youtube.com/) and is
 licensed under the [GPLv3 license](./LICENSE).
 
+## Image / Video storage
+In this project videos and images are saved as `bytea` into the database. This
+is usually an incredibly bad idea to do, but for the purposes of hosting this
+project in Heroku, it must be done this way. Another solution would possibly be
+to host the files on an external platform, but that would require relying on
+external platforms and their expenses.
+
+As the Heroku database is limited in capacity, the default video size limit is
+5MB, which is more than enough for a lot of videos and is small enough to fit
+around 200 videos of max size into the database.
+
 ## Minimum Viable Product:
 Minimum viable product for this use case means basically a simple and ugly
 version of YouTube. The optimal version would be quite similar to YouTube itself
