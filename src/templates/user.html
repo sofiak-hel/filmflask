@@ -7,7 +7,8 @@
 <body>
     <p><a href="/">Back to homepage</a></p>
     <hr>
-    <h1>{{ user.handle }} (@{{ user.handle }})</h1>
+    <h1>{{ user.nickname }}</h1>
+    <p>@{{ user.handle }}</p>
     <img src="/image/{{ user.avatar_id }}" width=250>
     <p>{{ user.bio }}</p>
     {% if me.user_id == user.user_id %}
@@ -20,6 +21,7 @@
     <div>
         <img src="/image/{{ video.thumbnail_id }}" width=100>
         <p><b><a href="/watch/{{ video.video_id }}">{{ video.title }}</a></b></p>
+        <p>Views: {{ video.download_counter }}</p>
         <p>{{ video.upload_time }}</p>
     </div>
     <hr>

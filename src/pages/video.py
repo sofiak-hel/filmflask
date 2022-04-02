@@ -48,6 +48,7 @@ def video_get(video_id):
 @video_bp.route("/watch/<uuid:video_id>")
 def watch(video_id):
     video = Video.from_id(video_id)
+    video.add_download()
     if video is None:
         return "Failed to get video or uploader!"
     else:

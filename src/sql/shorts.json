@@ -18,5 +18,6 @@
     "all_videos": "select * from videos v left join users u on u.user_id = v.user_id order by v.upload_time desc",
     "search_videos": "select * from videos v left join users u on u.user_id = v.user_id where video_search_en @@ to_tsquery(:search) or video_search_fi @@ to_tsquery(:search)",
     "search_videos_substr": "select * from videos v left join users u on u.user_id = v.user_id where lower(v.title) || ' ' || lower(v.description) || ' ' || lower(u.nickname) || ' ' || lower(u.handle) like :search",
-    "get_videos_by_uploader": "select * from videos v left join users u on u.user_id = v.user_id where u.user_id in :user_ids order by v.upload_time desc"
+    "get_videos_by_uploader": "select * from videos v left join users u on u.user_id = v.user_id where u.user_id in :user_ids order by v.upload_time desc",
+    "inc_video_counter": "update videos set download_counter = download_counter + 1 where video_id = :video_id"
 }

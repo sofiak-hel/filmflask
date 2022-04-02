@@ -8,13 +8,13 @@
     <h1>Upload video</h1>
     <form action="/upload" method="post" enctype="multipart/form-data">
         <label for="title" minlength="{{ config.VIDEO_TITLE_MIN_LENGTH }}"
-            maxlength="{{ config.VIDEO_TITLE_MAX_LENGTH }}">Video title: </label>
+            maxlength="{{ config.VIDEO_TITLE_MAX_LENGTH }}" required>Video title: </label>
         <input type="text" name="title" id="title"
             placeholder="{{ config.VIDEO_TITLE_MIN_LENGTH }} - {{ config.VIDEO_TITLE_MAX_LENGTH }} characters"></br>
         <label for="description">description: </label>
         <textarea name="description" id="description"></textarea></br>
         <label for="video">Upload video: </label>
-        <input type="file" name="video" id="video" accept="video/mp4, video/webm"></br>
+        <input type="file" name="video" id="video" accept="video/mp4, video/webm" required></br>
         <input type="submit" value="Upload">
     </form>
 

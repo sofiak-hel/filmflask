@@ -6,9 +6,10 @@
 
 <body>
     <p><a href="/">Back to homepage</a></p>
-    <video src="/video/{{ video.video_id }}" controls=true></video>
+    <video autoplay="true" src="/video/{{ video.video_id }}" controls=true></video>
     <h1>{{ video.title }}</h1>
     <p>{{ video.description }}</p>
+    <p>Views: {{ video.download_counter }}</p>
     <p>Uploaded: {{ video.upload_time }} by: <a href="/user/{{ video.uploader.handle }}">{{ video.uploader.nickname }}
             (@{{ video.uploader.handle }})</a></p>
     <img src="/image/{{ video.uploader.avatar_id }}" width=60>

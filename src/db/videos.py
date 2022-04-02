@@ -25,6 +25,7 @@ class Video:
         self.description: str = row["description"]
         self.thumbnail_id: UUID = row["thumbnail_id"]
         self.upload_time: time = row["upload_time"]
+        self.download_counter: int = row["download_counter"]
         self.uploader: BaseUser = BaseUser(row)
 
     @staticmethod
@@ -77,6 +78,10 @@ class Video:
         for row in res:
             videos.append(Video(row))
         return videos
+
+    def add_download(self) -> bool:
+        self.download_counter += 1
+        return add_download(self.video_id)
 
     def getBuffer(self) -> IOBase:
         return BytesIO(self.blob)
@@ -140,3 +145,15 @@ def get_video(video_id: UUID) -> Optional[dict]:
     except Exception as e:
         print(e)
         return None
+
+
+def add_download(video_id: UUID) -> bool:
+    try:
+        res = db.session.execute(sql["inc_video_counter"], {
+            "video_id": video_id,
+        })
+        db.session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False

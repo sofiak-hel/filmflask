@@ -26,6 +26,7 @@
     <div>
         <img src="/image/{{ video.thumbnail_id }}" width=100>
         <p><b><a href="/watch/{{ video.video_id }}">{{ video.title }}</a></b></p>
+        <p>Views: {{ video.download_counter }}</p>
         <p>By <a href="/user/{{ video.uploader.handle }}">{{ video.uploader.nickname }} (@{{ video.uploader.handle
                 }})</a></p>
         <img src="/image/{{ video.uploader.avatar_id }}" width=60>

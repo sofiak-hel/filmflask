@@ -41,10 +41,10 @@ create table if not exists users (
 create index if not exists user_handles on users (handle);
 select setval('users_user_id_seq', 1) where not exists (select * from users);
 insert into users (
-    user_id, handle, nickname,
+    user_id, role_id, handle, nickname,
     password_hash
 ) values (
-    1, 'admin', 'admin',
+    1, 1, 'admin', 'admin',
     '$argon2id$v=19$m=65536,t=3,p=4$dIZFAL1Cwzx/8LuCUi/rOg$wsY3tqxbFrC5eoh/fHNmvtiKmpwxbNqX3Kkjkjn3v18'
 ) on conflict do nothing;
 
@@ -71,6 +71,7 @@ create table if not exists videos (
     description text not null default '',
     thumbnail_id uuid not null,
     upload_time timestamp not null default now(),
+    download_counter int not null default 0,
     video_search_en tsvector generated always as (to_tsvector('english', title || ' ' || description)) stored,
     video_search_fi tsvector generated always as (to_tsvector('finnish', title || ' ' || description)) stored,
     foreign key (user_id) references users (user_id) on delete cascade,
