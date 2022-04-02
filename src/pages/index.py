@@ -1,7 +1,8 @@
-from flask import Blueprint, session, render_template, redirect, request
+from flask import Blueprint, session, redirect, request
 
 from db.users import AuthUser
 from db.videos import Video
+from util import render_template
 
 index_bp = Blueprint('home_page', __name__,
                      template_folder='templates')

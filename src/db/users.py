@@ -70,6 +70,12 @@ class AuthUser(BaseUser):
     def register(handle: str, nickname: str, password: str):
         return create_user(handle, nickname, password)
 
+    @staticmethod
+    def validate_session(session: dict) -> bool:
+        if "session_id" not in session:
+            return False
+        return find_session(session["session_id"]) is not None
+
     def logout(self):
         delete_session(self.session_id)
 
@@ -150,11 +156,22 @@ def create_session(user_id: str) -> Optional[dict]:
         return None
 
 
+def find_session(session_id: UUID) -> Optional[dict]:
+    try:
+        clear_old_sessions()
+        result = db.session.execute(sql["find_session"], {
+            "session_id": session_id
+        })
+        return result.fetchone()
+    except Exception as e:
+        print(e)
+        return None
+
+
 def find_session_and_user(session_id: str) -> Optional[dict]:
     try:
         data = {"session_id": session_id}
-        db.session.execute(sql["clear_old_sessions"])
-        db.session.commit()
+        clear_old_sessions()
         result = db.session.execute(
             sql["find_session_and_user"], data).fetchone()
         if result is None:
@@ -169,6 +186,7 @@ def find_session_and_user(session_id: str) -> Optional[dict]:
 
 def delete_session(session_id: str) -> bool:
     try:
+        clear_old_sessions()
         db.session.execute(sql["delete_session"], {"session_id": session_id})
         db.session.commit()
         return True
@@ -190,3 +208,12 @@ def update_user(user_id: int, nickname: str, bio: str, avatar_id: UUID) -> bool:
     except Exception as e:
         print(e)
         return False
+
+
+def clear_old_sessions():
+    try:
+        db.session.execute(sql["clear_old_sessions"])
+        db.session.commit()
+    except Exception as e:
+        print(e)
+        return None

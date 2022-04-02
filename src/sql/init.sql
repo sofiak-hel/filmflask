@@ -58,7 +58,7 @@ create table if not exists sessions (
 create table if not exists csrf_tokens (
     csrf_token uuid primary key default uuid_generate_v4(),
     session_id uuid not null,
-    expiration timestamp not null default now() + '5 minutes',
+    expiration timestamp not null default now() + '30 minutes',
     foreign key (session_id) references sessions (session_id) on delete cascade
 );
 

@@ -7,6 +7,7 @@
 <body>
     <h1>Upload video</h1>
     <form action="/upload" method="post" enctype="multipart/form-data">
+        {% include 'csrf_token.html' %}
         <label for="title" minlength="{{ config.VIDEO_TITLE_MIN_LENGTH }}"
             maxlength="{{ config.VIDEO_TITLE_MAX_LENGTH }}" required>Video title: </label>
         <input type="text" name="title" id="title"

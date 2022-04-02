@@ -5,8 +5,8 @@
     "update_user": "update users set nickname=:nickname, bio=:bio, avatar_id=:avatar_id where user_id=:user_id",
     "update_user_password": "update users set password_hash=:password_hash where user_id=:user_id",
     "create_session": "insert into sessions (user_id) values (:user_id) returning session_id",
-    "find_session": "select * from sessions where session_id = :session_id",
-    "find_session_and_user": "select * from sessions s left join users u on u.user_id = s.user_id where session_id = :session_id",
+    "find_session": "select session_id from sessions where session_id = :session_id and expiration > now()",
+    "find_session_and_user": "select * from sessions s left join users u on u.user_id = s.user_id where session_id = :session_id and expiration > now()",
     "clear_old_sessions": "delete from sessions where expiration <= now()",
     "refresh_session": "update sessions set expiration = now() + '2 hours' where session_id = :session_id",
     "delete_session": "delete from sessions where session_id = :session_id",
@@ -19,5 +19,8 @@
     "search_videos": "select * from videos v left join users u on u.user_id = v.user_id where video_search_en @@ to_tsquery(:search) or video_search_fi @@ to_tsquery(:search)",
     "search_videos_substr": "select * from videos v left join users u on u.user_id = v.user_id where lower(v.title) || ' ' || lower(v.description) || ' ' || lower(u.nickname) || ' ' || lower(u.handle) like :search",
     "get_videos_by_uploader": "select * from videos v left join users u on u.user_id = v.user_id where u.user_id in :user_ids order by v.upload_time desc",
-    "inc_video_counter": "update videos set download_counter = download_counter + 1 where video_id = :video_id"
+    "inc_video_counter": "update videos set download_counter = download_counter + 1 where video_id = :video_id",
+    "create_csrf_token": "insert into csrf_tokens (session_id) values (:session_id) returning *",
+    "clear_csrf_tokens": "delete from csrf_tokens where expiration <= now()",
+    "get_csrf_token": "select * from csrf_tokens where csrf_token = :csrf_token and expiration > now()"
 }

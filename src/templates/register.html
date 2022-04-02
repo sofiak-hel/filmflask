@@ -11,6 +11,7 @@
 
 <body>
     <form action="" method="post">
+        {% include 'csrf_token.html' %}
         <label for="username">Handle: </label>
         <input type="text" name="username" id="username" minlength="{{ config.HANDLE_MIN_LENGTH }}"
             maxlength="{{ config.HANDLE_MAX_LENGTH }}" pattern="([A-z0-9])+"

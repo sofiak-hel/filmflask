@@ -1,14 +1,16 @@
-from flask import Blueprint, render_template, redirect, request, session, send_file, current_app
+from flask import Blueprint, redirect, request, session, send_file, current_app
 
 from db.users import AuthUser
 from db.images import Image
-from util import error
+from util import error, csrf_token_required, auth_required, render_template
 
 image_bp = Blueprint('image_page', __name__,
                      template_folder='templates')
 
 
 @image_bp.route("/image", methods=["POST"])
+@csrf_token_required()
+@auth_required()
 def avatar_upload():
     user = AuthUser.from_session(session)
     if user is None:

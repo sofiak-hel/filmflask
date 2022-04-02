@@ -1,10 +1,10 @@
-from flask import Blueprint, render_template, redirect, request, session, current_app
+from flask import Blueprint, redirect, request, session, current_app
 from typing import Optional
 
 from db.users import BaseUser, AuthUser
 from db.images import Image
 from db.videos import Video
-from util import error
+from util import error, csrf_token_required, auth_required, render_template
 
 user_bp = Blueprint('user_page', __name__,
                     template_folder='templates')
@@ -21,11 +21,10 @@ def user(handle):
 
 
 @user_bp.route("/user/edit", methods=["GET", "POST"])
+@csrf_token_required()
+@auth_required()
 def edit_user():
     user = AuthUser.from_session(session)
-    if user is None:
-        return redirect("/")
-
     if request.method == "GET":
         return render_template("user_edit.html", me=user, config=current_app.config)
 

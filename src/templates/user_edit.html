@@ -7,6 +7,7 @@
 <body>
     <h1>Edit user info for @{{ me.handle }}</h1>
     <form action="/user/edit" method="post" enctype="multipart/form-data">
+        {% include 'csrf_token.html' %}
         <label for="nickname">Update nickname: </label>
         <input type="text" name="nickname" id="nickname" value="{{ me.nickname }}" placeholder="{{ me.nickname }}"
             minlength="{{ config.NICKNAME_MIN_LENGTH }}" maxlength="{{ config.NICKNAME_MAX_LENGTH }}"></br></br>
@@ -21,6 +22,7 @@
     <p>No avatar set.</p>
     {% endif %}
     <form action="/image" method="post" enctype="multipart/form-data">
+        {% include 'csrf_token.html' %}
         <label for="avatar">Upload new avatar: </label>
         <input type="file" name="avatar" id="avatar" accept="image/png, image/jpeg"></br>
         <input type="submit" value="Upload">

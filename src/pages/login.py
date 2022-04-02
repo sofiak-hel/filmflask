@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, redirect, request, session, current_app
+from flask import Blueprint, redirect, request, session, current_app
 
 from db.users import AuthUser
-from util import error
+from util import error, csrf_token_required, render_template
 
 login_bp = Blueprint('login_page', __name__,
                      template_folder='templates')
@@ -27,6 +27,7 @@ def login():
 
 
 @login_bp.route("/register", methods=["GET", "POST"])
+@csrf_token_required()
 def register():
     user = AuthUser.from_session(session)
     if user is not None:
@@ -53,7 +54,8 @@ def register():
             return error("Failed to create user! Maybe user @%s already exists?" % handle)
 
 
-@ login_bp.route("/logout", methods=["POST"])
+@login_bp.route("/logout", methods=["POST"])
+@csrf_token_required()
 def logout():
     user = AuthUser.from_session(session)
     if user is not None:

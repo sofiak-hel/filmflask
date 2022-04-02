@@ -1,20 +1,20 @@
-from flask import Blueprint, render_template, redirect, request, session, send_file, current_app
+from flask import Blueprint, redirect, request, session, send_file, current_app
 
 from db.users import AuthUser
 from db.videos import Video
 from db.images import Image
-from util import error
+from db.csrf import CSRFToken
+from util import error, csrf_token_required, auth_required, render_template
 
 video_bp = Blueprint('video_page', __name__,
                      template_folder='templates')
 
 
 @video_bp.route("/upload", methods=["GET", "POST"])
+@csrf_token_required()
+@auth_required()
 def video_upload():
     user = AuthUser.from_session(session)
-    if user is None:
-        return redirect("/")
-
     if request.method == "GET":
         return render_template("upload.html", config=current_app.config)
 

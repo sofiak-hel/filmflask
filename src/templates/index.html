@@ -8,6 +8,7 @@
     {% if me %}
     <h1>Welcome, <a href="/user/{{ me.handle }}">{{ me.nickname }}</a></h1>
     <form action="/logout" method="post">
+        {% include 'csrf_token.html' %}
         <input type="submit" value="Logout">
     </form>
     </br></br>
