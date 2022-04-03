@@ -20,7 +20,8 @@ app.secret_key = app.config["SECRET_KEY"]
 HEROKU_DB_URL = getenv("DATABASE_URL")
 
 if HEROKU_DB_URL is not None:
-    app.config["SQLALCHEMY_DATABASE_URI"] = HEROKU_DB_URL
+    app.config["SQLALCHEMY_DATABASE_URI"] = HEROKU_DB_URL.replace(
+        "postgres://", "postgresql://")
 else:
     app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://"\
         f"{app.config['PG_USER']}:{app.config['PG_PASS']}"\
