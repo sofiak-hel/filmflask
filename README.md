@@ -6,6 +6,11 @@ University course [Tietokantasovellus](https://hy-tsoha.github.io/materiaali/).
 FilmFlask aims to be quite similar to [YouTube](https://www.youtube.com/) and is
 licensed under the [GPLv3 license](./LICENSE).
 
+A demo is hosted on [Heroku](https://dashboard.heroku.com/) at
+[https://filmflask.herokuapp.com/](https://filmflask.herokuapp.com/). It seems
+that Heroku is limiting bandwidth to a degree that _might_ cause issues with
+uploading and downloading videos
+
 ## Notes for the reviewer:
 
 This project is structured in the following way:
