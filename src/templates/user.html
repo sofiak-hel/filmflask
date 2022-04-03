@@ -38,6 +38,7 @@
         <p><b><a href="/watch/{{ video.video_id }}">{{ video.title }}</a></b></p>
         <p>Views: {{ video.download_counter }}</p>
         <p>{{ video.upload_time }}</p>
+        <p>Likes/Dislikes: {{ video.get_ratings() }}</p>
     </div>
     <hr>
     {% endfor %}

@@ -32,6 +32,7 @@
                 }})</a></p>
         <img src="/image/{{ video.uploader.avatar_id }}" width=60>
         <p>{{ video.upload_time }}</p>
+        <p>Likes/Dislikes: {{ video.get_ratings() }}</p>
     </div>
     <hr>
     {% endfor %}
