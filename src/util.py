@@ -9,7 +9,8 @@ from db.users import AuthUser
 
 
 def error(error: str):
-    return render_template("error.html", error=error)
+    me = AuthUser.from_session(session)
+    return render_template("error.html", me=me, error=error)
 
 
 def process_image(blob: bytes):
@@ -54,7 +55,7 @@ def process_video(blob: bytes):
             # Scales down the video so it is 480p or smaller
             .filter_('scale', w="if(gt(ih,iw),-1,min(iw,854))", h="if(gt(ih,iw),min(ih,480),-1)", force_original_aspect_ratio='decrease')
             # Pads the video with black bars, so every video will end up as 16:9 aspect ratio
-            .filter_('pad', "if(gt(iw,ih),iw+1,ceil(ih*(16/9)/2)*2)", "if(gt(ih,iw),ih+1,ceil(iw*(9/16)/2)*2)", "-1", "-1")
+            .filter_('pad', "max(iw,ceil(ih*(16/9)/2)*2)", "max(ceil(iw*(9/16)/2)*2,ih)", "-1", "-1")
         )
     process = (
         ffmpeg.output(*streams,

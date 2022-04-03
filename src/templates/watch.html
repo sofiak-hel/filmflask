@@ -2,75 +2,102 @@
 
 <head>
     <title>{{ video.title }}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
 </head>
 
 <body>
-    <p><a href="/">Back to homepage</a></p>
-    <video autoplay="true" src="/video/{{ video.video_id }}" controls=true height="480"></video>
-    <h1>{{ video.title }}</h1>
-    <p>{{ video.description }}</p>
-    <p>Views: {{ video.download_counter }}</p>
-    <p>Uploaded: {{ video.upload_time }} by: <a href="/user/{{ video.uploader.handle }}">{{ video.uploader.nickname }}
-            (@{{ video.uploader.handle }})</a></p>
-    <p>Subscribers: {{ video.uploader.get_subscribers()|length }}</p>
-    <img src="/image/{{ video.uploader.avatar_id }}" width=60>
+    {% include 'header.html' %}
+    <div class="content">
+        <video autoplay="true" src="/video/{{ video.video_id }}" controls=true height="480"></video>
+        <h1>{{ video.title }}</h1>
+        <div class="video-details">
+            <p class="views">{{ video.download_counter }} views</p>
+            <p class="ratings">Likes/Dislikes: {{ video.get_ratings() }}</p>
+        </div>
+        <p class="video-description">{{ video.description }}</p>
+        <p class="timestamp">{{ video.upload_time }}</p>
 
-    <p>Likes/Dislikes: {{ video.get_ratings() }}</p>
-    {% if me %}
-    <form action="/rate/thumbsup" method="post">
-        {% include 'csrf_token.html' %}
-        <input type="hidden" name="video_id" value="{{ video.video_id }}">
-        <input type="submit" value="Thumbs up">
-    </form>
-    <form action="/rate/thumbsdown" method="post">
-        {% include 'csrf_token.html' %}
-        <input type="hidden" name="video_id" value="{{ video.video_id }}">
-        <input type="submit" value="Thumbs down">
-    </form>
-    {% set rating = me.get_rating(video.video_id) %}
-    {% if rating %}
-    {% set rating_text = "liked" if rating == 1 else "disliked" %}
-    <p>You've {{ rating_text }} this video. Would you like to remove this rating?</p>
-    <form action="/rate/delete" method="post">
-        {% include 'csrf_token.html' %}
-        <input type="hidden" name="video_id" value="{{ video.video_id }}">
-        <input type="submit" value="Delete rating">
-    </form>
-    {% endif %}
-    {% endif %}
+        <div class="uploader">
+            <div class="user-details">
+                <img src="/image/{{ video.uploader.avatar_id }}" class="avatar">
+                <span class="nickname">
+                    {{ video.uploader.nickname }}
+                </span>
+            </div>
+        </div>
+        {% if me %}
+        <div class="rating-buttons">
+            <form action="/rate/thumbsup" method="post">
+                {% include 'csrf_token.html' %}
+                <input type="hidden" name="video_id" value="{{ video.video_id }}">
+                <input type="submit" value="Thumbs up" class="button">
+            </form>
+            <form action="/rate/thumbsdown" method="post">
+                {% include 'csrf_token.html' %}
+                <input type="hidden" name="video_id" value="{{ video.video_id }}">
+                <input type="submit" value="Thumbs down" class="button">
+            </form>
+            {% set rating = me.get_rating(video.video_id) %}
+            {% if rating %}
+            {% set rating_text = "liked" if rating == 1 else "disliked" %}
+            <form action="/rate/delete" method="post">
+                {% include 'csrf_token.html' %}
+                <input type="hidden" name="video_id" value="{{ video.video_id }}">
+                <input type="submit" value="Delete rating" class="button">
+            </form>
+            {% endif %}
+        </div>
 
-    <hr>
-    {% if me %}
-    <p>Commenting as {{ me.nickname }}</p>
-    <form action="/comment" method="post">
-        {% include 'csrf_token.html' %}
-        <input type="hidden" name="comment_video_id" id="comment_video_id" value="{{ video.video_id }}">
-        <textarea name="content" id="content" minlength="1" maxlength="{{ config.COMMENT_MAX_LENGTH }}"
-            required></textarea> </br>
-        <input type="submit" value="Comment">
-    </form>
-    {% else %}
-    <p>You must be <a href="/login">logged in</a> to post a comment!</p>
-    {% endif %}
-    <hr>
-    {% for comment in video.get_comments() %}
-    <div>
-        <img src="/image/{{ comment.user.avatar_id }}" width=100>
-        <p><a href="/user/{{ comment.user.handle }}">{{ comment.user.nickname }} (@{{ comment.user.handle }}):</a>
-        </p>
-        <p>{{ comment.content }}</p>
-        <p>{{ comment.timestamp }}</p>
-        {% if me.user_id == comment.user.user_id %}
-
-        <form action="/comment/delete" method="post">
-            {% include 'csrf_token.html' %}
-            <input type="hidden" name="comment_id" value="{{ comment.comment_id }}">
-            <input type="submit" value="Delete comment">
-        </form>
         {% endif %}
+
+        <div class="comment-section">
+            {% if me %}
+            <span style="display: inline">Commenting as</span>
+            <div class="uploader">
+                <div class="user-details">
+                    <img src="/image/{{ me.avatar_id }}" class="avatar">
+                    <span class="nickname">
+                        {{ me.nickname }}
+                    </span>
+                </div>
+            </div>
+            <form action="/comment" method="post">
+                {% include 'csrf_token.html' %}
+                <input type="hidden" name="comment_video_id" id="comment_video_id" value="{{ video.video_id }}">
+                <textarea name="content" id="content" minlength="1" maxlength="{{ config.COMMENT_MAX_LENGTH }}"
+                    required></textarea> </br>
+                <input type="submit" value="Comment" class="button">
+            </form>
+            {% else %}
+            <p>You must be <a href="/login">logged in</a> to post a comment!</p>
+            {% endif %}
+            {% for comment in video.get_comments() %}
+            <div class="comment">
+                <a href="/user/{{ video.uploader.handle }}">
+                    <div class="uploader">
+                        <div class="user-details">
+                            <img src="/image/{{ comment.user.avatar_id }}" class="avatar">
+                            <span class="nickname">
+                                {{ comment.user.nickname }}
+                            </span>
+                        </div>
+                    </div>
+                </a>
+                <p class="comment-content">{{ comment.content }}</p>
+                <p class="timestamp">{{ comment.timestamp }}</p>
+                {% if me.user_id == comment.user.user_id %}
+
+                <form action="/comment/delete" method="post">
+                    {% include 'csrf_token.html' %}
+                    <input type="hidden" name="comment_id" value="{{ comment.comment_id }}">
+                    <input type="submit" value="Delete comment" class="button">
+                </form>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
     </div>
-    <hr>
-    {% endfor %}
+
 </body>
 
 </html>

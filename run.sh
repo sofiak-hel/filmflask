@@ -1,1 +1,0 @@
-gunicorn app:app --chdir src -b 0.0.0.0:8080

@@ -2,33 +2,35 @@
 
 <head>
     <title>Edit user info</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
 </head>
 
 <body>
-    <h1>Edit user info for @{{ me.handle }}</h1>
-    <form action="/user/edit" method="post" enctype="multipart/form-data">
-        {% include 'csrf_token.html' %}
-        <label for="nickname">Update nickname: </label>
-        <input type="text" name="nickname" id="nickname" value="{{ me.nickname }}" placeholder="{{ me.nickname }}"
-            minlength="{{ config.NICKNAME_MIN_LENGTH }}" maxlength="{{ config.NICKNAME_MAX_LENGTH }}"></br></br>
-        <label for="bio">Update bio: </label></br>
-        <textarea name="bio" id="bio" maxlength="{{ config.BIO_MAX_LENGTH }}">{{ me.bio }}</textarea></br></br>
-        <input type="submit" value="Update">
-    </form>
+    {% include 'header.html' %}
+    <div class="content">
+        <h1>Edit user info for @{{ me.handle }}</h1>
+        <form action="/user/edit" method="post" enctype="multipart/form-data">
+            {% include 'csrf_token.html' %}
+            <label for="nickname">Update nickname: </label>
+            <input type="text" name="nickname" id="nickname" value="{{ me.nickname }}" placeholder="{{ me.nickname }}"
+                minlength="{{ config.NICKNAME_MIN_LENGTH }}" maxlength="{{ config.NICKNAME_MAX_LENGTH }}"></br></br>
+            <label for="bio">Update bio: </label></br>
+            <textarea name="bio" id="bio" maxlength="{{ config.BIO_MAX_LENGTH }}">{{ me.bio }}</textarea></br></br>
+            <input type="submit" value="Update" class="button">
+        </form>
 
-    {% if me.avatar_id %}
-    <p><img src="/image/{{ me.avatar_id }}" width=250></p>
-    {% else %}
-    <p>No avatar set.</p>
-    {% endif %}
-    <form action="/image" method="post" enctype="multipart/form-data">
-        {% include 'csrf_token.html' %}
-        <label for="avatar">Upload new avatar: </label>
-        <input type="file" name="avatar" id="avatar" accept="image/png, image/jpeg"></br>
-        <input type="submit" value="Upload">
-    </form>
-
-    <p><a href="/">Back to homepage</a></p>
+        {% if me.avatar_id %}
+        <p><img src="/image/{{ me.avatar_id }}" width=250></p>
+        {% else %}
+        <p>No avatar set.</p>
+        {% endif %}
+        <form action="/image" method="post" enctype="multipart/form-data">
+            {% include 'csrf_token.html' %}
+            <label for="avatar">Upload new avatar: </label>
+            <input type="file" name="avatar" id="avatar" accept="image/png, image/jpeg"></br>
+            <input type="submit" value="Upload" class="button">
+        </form>
+    </div>
 </body>
 
 </html>

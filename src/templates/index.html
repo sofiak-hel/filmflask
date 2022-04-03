@@ -1,41 +1,21 @@
 <html>
 
 <head>
-    <title>Home</title>
+    <title>FilmFlask</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
 </head>
 
 <body>
-    {% if me %}
-    <h1>Welcome, <a href="/user/{{ me.handle }}">{{ me.nickname }}</a></h1>
-    <form action="/logout" method="post">
-        {% include 'csrf_token.html' %}
-        <input type="submit" value="Logout">
-    </form>
-    </br></br>
-    <a href="/upload">Upload video</a>
-    {% else %}
-    <a href="/login">Log in</a>
-    {% endif %}
-    <hr>
+    {% include 'header.html' %}
 
 
-    <form action="/search" method="get">
-        <input type="text" name="query" id="query"> </br>
-        <input type="submit" value="Search">
-    </form>
-    {% for video in videos %}
-    <div>
-        <img src="/image/{{ video.thumbnail_id }}" width=100>
-        <p><b><a href="/watch/{{ video.video_id }}">{{ video.title }}</a></b></p>
-        <p>Views: {{ video.download_counter }}</p>
-        <p>By <a href="/user/{{ video.uploader.handle }}">{{ video.uploader.nickname }} (@{{ video.uploader.handle
-                }})</a></p>
-        <img src="/image/{{ video.uploader.avatar_id }}" width=60>
-        <p>{{ video.upload_time }}</p>
-        <p>Likes/Dislikes: {{ video.get_ratings() }}</p>
+    <div class="content">
+        <div class="video-list">
+            {% for video in videos %}
+            {% include 'video.html' %}
+            {% endfor %}
+        </div>
     </div>
-    <hr>
-    {% endfor %}
 </body>
 
 </html>

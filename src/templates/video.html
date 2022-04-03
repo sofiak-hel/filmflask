@@ -1,0 +1,19 @@
+<div class="video">
+    <a href="/watch/{{ video.video_id }}">
+        <img class="thumbnail" src="/image/{{ video.thumbnail_id }}" width=100>
+        <p class="title">{{ video.title }}</p>
+    </a>
+
+    <a href="/user/{{ video.uploader.handle }}">
+        <div class="uploader">
+            <div class="user-details">
+                <img src="/image/{{ video.uploader.avatar_id }}" class="avatar">
+                <span class="nickname">
+                    {{ video.uploader.nickname }}
+                </span>
+            </div>
+        </div>
+    </a>
+    <p>{{ video.download_counter }} views</p>
+    <p class="timestamp">{{ video.upload_time }}</p>
+</div>

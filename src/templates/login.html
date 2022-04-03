@@ -2,17 +2,21 @@
 
 <head>
     <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
 </head>
 
 <body>
-    <form action="" method="post">
-        <label for="username">Handle: </label>
-        <input type="text" name="username" id="username"></br>
-        <label for="password">Password: </label>
-        <input type="password" name="password" id="password"></br>
-        <input type="submit" value="Login">
-    </form>
-    <p>No account yet? <a href="/register">Register here</a></p>
+    {% include 'header.html' %}
+    <div class="content">
+        <form action="" method="post">
+            <label for="username">Handle: </label>
+            <input type="text" name="username" id="username"></br>
+            <label for="password">Password: </label>
+            <input type="password" name="password" id="password"></br>
+            <input type="submit" value="Login" class="button">
+        </form>
+        <p>No account yet? <a href="/register">Register here</a></p>
+    </div>
 </body>
 
 </html>

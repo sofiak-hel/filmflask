@@ -2,29 +2,30 @@
 
 <head>
     <title>Register</title>
-    <style>
-        label[for="username"]::after {
-            content: '@'
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
 </head>
 
 <body>
-    <form action="" method="post">
-        <label for="username">Handle: </label>
-        <input type="text" name="username" id="username" minlength="{{ config.HANDLE_MIN_LENGTH }}"
-            maxlength="{{ config.HANDLE_MAX_LENGTH }}" pattern="([A-z0-9])+"
-            placeholder=" {{ config.HANDLE_MIN_LENGTH }} - {{ config.HANDLE_MAX_LENGTH }} characters" required> </br>
-        <label for="nickname">What do you want us to call you? </label>
-        <input type="text" name="nickname" id="nickname" minlength="{{ config.NICKNAME_MIN_LENGTH }}"
-            maxlength="{{ config.NICKNAME_MAX_LENGTH }}"
-            placeholder="{{ config.NICKNAME_MIN_LENGTH }} - {{ config.NICKNAME_MAX_LENGTH }} characters" required></br>
-        <label for="password">Password: </label>
-        <input type="password" name="password" id="password" required></br>
-        <label for="password2">Re-type password: </label>
-        <input type="password" name="password2" id="password2" required></br>
-        <input type="submit" value="Register">
-    </form>
+    {% include 'header.html' %}
+    <div class="content">
+        <form action="" method="post">
+            <label for="username">Handle: </label>
+            <input type="text" name="username" id="username" minlength="{{ config.HANDLE_MIN_LENGTH }}"
+                maxlength="{{ config.HANDLE_MAX_LENGTH }}" pattern="([A-z0-9])+"
+                placeholder=" {{ config.HANDLE_MIN_LENGTH }} - {{ config.HANDLE_MAX_LENGTH }} characters" required>
+            </br>
+            <label for="nickname">What do you want us to call you? </label>
+            <input type="text" name="nickname" id="nickname" minlength="{{ config.NICKNAME_MIN_LENGTH }}"
+                maxlength="{{ config.NICKNAME_MAX_LENGTH }}"
+                placeholder="{{ config.NICKNAME_MIN_LENGTH }} - {{ config.NICKNAME_MAX_LENGTH }} characters"
+                required></br>
+            <label for="password">Password: </label>
+            <input type="password" name="password" id="password" required></br>
+            <label for="password2">Re-type password: </label>
+            <input type="password" name="password2" id="password2" required></br>
+            <input type="submit" value="Register" class="button">
+        </form>
+    </div>
 </body>
 
 </html>

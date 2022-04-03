@@ -18,7 +18,7 @@ video_bp = Blueprint('video_page', __name__,
 def video_upload():
     user = AuthUser.from_session(session)
     if request.method == "GET":
-        return render_template("upload.html", config=current_app.config)
+        return render_template("upload.html", me=user, config=current_app.config)
 
     elif request.method == "POST":
         title: str = request.form.get("title", "").strip()

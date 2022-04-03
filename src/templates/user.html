@@ -2,46 +2,47 @@
 
 <head>
     <title>{{ user.nickname }}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
 </head>
 
 <body>
-    <p><a href="/">Back to homepage</a></p>
-    <hr>
-    <h1>{{ user.nickname }}</h1>
-    <p>@{{ user.handle }}</p>
-    <img src="/image/{{ user.avatar_id }}" width=250>
-    <p>{{ user.bio }}</p>
-    {% if me %}
-    {% if me.user_id == user.user_id %}
-    <a href="/user/edit">Edit user info</a>
-    {% else %}
-    {% if not me.check_subscription(user.user_id) %}
-    <form action="/subscribe/{{ user.handle }}" method="post">
-        {% include 'csrf_token.html' %}
-        <input type="submit" value="Subscribe">
-    </form>
-    {% else %}
-    <form action="/unsubscribe/{{ user.handle }}" method="post">
-        {% include 'csrf_token.html' %}
-        <input type="submit" value="Unsubscribe">
-    </form>
-    {% endif %}
-    {% endif %}
-    {% endif %}
-    <p>Subscribers: {{ user.get_subscribers()|length }}</p>
-    </br></br>
-    <hr>
+    {% include 'header.html' %}
+    <div class="content">
+        <div class="user">
+            <div class="user-details">
+                <img src="/image/{{ user.avatar_id }}" class="avatar">
+                <span class="nickname">
+                    {{ user.nickname }}
+                </span>
+            </div>
+            <p>{{ user.bio }}</p>
+            <p>Subscribers: {{ user.get_subscribers()|length }}</p>
+            {% if me %}
+            {% if me.user_id == user.user_id %}
+            <a href="/user/edit">Edit user info</a>
+            {% else %}
+            {% if not me.check_subscription(user.user_id) %}
+            <form action="/subscribe/{{ user.handle }}" method="post">
+                {% include 'csrf_token.html' %}
+                <input type="submit" value="Subscribe">
+            </form>
+            {% else %}
+            <form action="/unsubscribe/{{ user.handle }}" method="post">
+                {% include 'csrf_token.html' %}
+                <input type="submit" value="Unsubscribe">
+            </form>
+            {% endif %}
+            {% endif %}
+            {% endif %}
+        </div>
+        </br></br>
 
-    {% for video in videos %}
-    <div>
-        <img src="/image/{{ video.thumbnail_id }}" width=100>
-        <p><b><a href="/watch/{{ video.video_id }}">{{ video.title }}</a></b></p>
-        <p>Views: {{ video.download_counter }}</p>
-        <p>{{ video.upload_time }}</p>
-        <p>Likes/Dislikes: {{ video.get_ratings() }}</p>
+        <div class="video-list">
+            {% for video in videos %}
+            {% include 'video.html' %}
+            {% endfor %}
+        </div>
     </div>
-    <hr>
-    {% endfor %}
 </body>
 
 </html>
