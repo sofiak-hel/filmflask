@@ -24,12 +24,12 @@
             {% if not me.check_subscription(user.user_id) %}
             <form action="/subscribe/{{ user.handle }}" method="post">
                 {% include 'csrf_token.html' %}
-                <input type="submit" value="Subscribe">
+                <input type="submit" value="Subscribe" class="button">
             </form>
             {% else %}
             <form action="/unsubscribe/{{ user.handle }}" method="post">
                 {% include 'csrf_token.html' %}
-                <input type="submit" value="Unsubscribe">
+                <input type="submit" value="Unsubscribe" class="button">
             </form>
             {% endif %}
             {% endif %}
