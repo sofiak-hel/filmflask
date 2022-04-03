@@ -102,7 +102,7 @@ create table if not exists comments (
     comment_id serial primary key,
     video_id uuid not null,
     user_id int not null,
-    timestamp timestamp not null,
+    timestamp timestamp not null default now(),
     content text not null,
     foreign key (video_id) references videos (video_id) on delete cascade,
     foreign key (user_id) references users (user_id) on delete cascade

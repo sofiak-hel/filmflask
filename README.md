@@ -32,7 +32,7 @@ development of the product.
     - [X] Profile picture
 - [X] Uploading and viewing videos
     - [X] Must have a title, description and an upload time
-    - [ ] Commenting to said videos while logged in
+    - [X] Commenting to said videos while logged in
     - [ ] Rating said videos
 - [X] Subscribing to other users
 - [X] Browsing videos in the front page

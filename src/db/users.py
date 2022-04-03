@@ -49,6 +49,16 @@ class BaseUser:
             subs.append(row["subscribed_id"])
         return subs
 
+    def get_subscribers(self) -> list[int]:
+        res = get_subscribers(self.user_id)
+        subs: list[int] = []
+        if res is None:
+            return subs
+
+        for row in res:
+            subs.append(row["user_id"])
+        return subs
+
 
 class AuthUser(BaseUser):
     def __init__(self, row: dict):
@@ -97,6 +107,12 @@ class AuthUser(BaseUser):
 
     def check_subscription(self, other_id: int) -> bool:
         return check_subscription(self.user_id, other_id)
+
+    def delete_comment(self, comment_id: int) -> Optional[UUID]:
+        res = delete_comment_safe(comment_id, self.user_id)
+        if res is None:
+            return None
+        return res["video_id"]
 
     def __str__(self):
         return "%s (@%s). Bio: %s, avatar_id: %s." % (self.nickname, self.handle, self.bio, self.avatar_id)
@@ -289,3 +305,31 @@ def check_subscription(user_id: int, subscribed_id: int) -> bool:
     except Exception as e:
         print(e)
         return False
+
+
+def get_subscribers(user_id: int) -> Optional[list[dict]]:
+    try:
+        res = db.session.execute(sql["get_subscribers"], {
+            "user_id": user_id,
+        })
+        if res is None:
+            return None
+        return res.fetchall()
+    except Exception as e:
+        print(e)
+        return None
+
+
+def delete_comment_safe(comment_id: int, user_id: int) -> Optional[dict]:
+    try:
+        res = db.session.execute(sql["delete_comment_safe"], {
+            "comment_id": comment_id,
+            "user_id": user_id,
+        })
+        db.session.commit()
+        if res is None:
+            return None
+        return res.fetchone()
+    except Exception as e:
+        print(e)
+        return None

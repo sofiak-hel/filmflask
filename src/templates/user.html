@@ -11,23 +11,24 @@
     <p>@{{ user.handle }}</p>
     <img src="/image/{{ user.avatar_id }}" width=250>
     <p>{{ user.bio }}</p>
+    {% if me %}
     {% if me.user_id == user.user_id %}
     <a href="/user/edit">Edit user info</a>
     {% else %}
     {% if not me.check_subscription(user.user_id) %}
-    <p>Not subscribed</p>
     <form action="/subscribe/{{ user.handle }}" method="post">
         {% include 'csrf_token.html' %}
         <input type="submit" value="Subscribe">
     </form>
     {% else %}
-    <p>Subscribed</p>
     <form action="/unsubscribe/{{ user.handle }}" method="post">
         {% include 'csrf_token.html' %}
         <input type="submit" value="Unsubscribe">
     </form>
     {% endif %}
     {% endif %}
+    {% endif %}
+    <p>Subscribers: {{ user.get_subscribers()|length }}</p>
     </br></br>
     <hr>
 

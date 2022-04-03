@@ -1,11 +1,10 @@
 {
-    "SECRET_KEY": "some secret!",
+    "SECRET_KEY": "047f66dd5bc43238f6dd",
     "PG_HOST": "localhost",
     "PG_PORT": 5432,
     "PG_USER": "flasktest",
     "PG_PASS": "securepassword",
     "PG_DB": "filmflask",
-    "PSQL_URL": "postgresql://flasktest:securepassword@localhost/filmflask",
     "MAX_CONTENT_LENGTH": 5242880,
     "HANDLE_MAX_LENGTH": 12,
     "HANDLE_MIN_LENGTH": 3,
@@ -14,5 +13,6 @@
     "BIO_MAX_LENGTH": 100,
     "MAX_IMAGE_SIZE": 204800,
     "VIDEO_TITLE_MIN_LENGTH": 2,
-    "VIDEO_TITLE_MAX_LENGTH": 50
+    "VIDEO_TITLE_MAX_LENGTH": 50,
+    "COMMENT_MAX_LENGTH": 250
 }

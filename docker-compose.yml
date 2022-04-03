@@ -15,3 +15,11 @@ services:
       POSTGRES_PASSWORD: securepassword
       POSTGRES_DB: filmflask
       PGDATA: /var/lib/postgresql/data/pgdata
+
+  # filmflask:
+  #   build: .
+  #   restart: always
+  #   ports:
+  #     - 8080:5000
+  #   environment:
+  #     FILMFLASK_PG_HOST: db

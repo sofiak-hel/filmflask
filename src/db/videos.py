@@ -34,21 +34,16 @@ class VideoListing:
         else:
             res = all_videos()
 
-        if res is None:
-            return []
         videos = []
-        for row in res:
+        for row in (res or []):
             videos.append(VideoListing(row))
         return videos
 
     @staticmethod
     def by_uploaders(uploader_ids: list[int]) -> list['VideoListing']:
         res = get_videos(uploader_ids)
-
-        if res is None:
-            return []
         videos = []
-        for row in res:
+        for row in (res or []):
             videos.append(VideoListing(row))
         return videos
 
@@ -56,16 +51,34 @@ class VideoListing:
     def subbox(user_id: int) -> list['VideoListing']:
         res = get_subbox(user_id)
         videos: list['VideoListing'] = []
-        if res is None:
-            return videos
-
-        for row in res:
+        for row in (res or []):
             videos.append(VideoListing(row))
         return videos
 
     def add_download(self) -> bool:
         self.download_counter += 1
         return add_download(self.video_id)
+
+    def add_comment(self, user_id: int, content: str) -> bool:
+        return add_comment(self.video_id, user_id, content)
+
+    def get_comments(self) -> list['Comment']:
+        res = get_comments(self.video_id)
+        comments: list['Comment'] = []
+        for row in (res or []):
+            comments.append(Comment(row))
+
+        return comments
+
+
+class Comment:
+    def __init__(self, row: dict):
+        self.comment_id: int = row["comment_id"]
+        self.video_id: UUID = row["video_id"]
+        self.user_id: int = row["user_id"]
+        self.timestamp: time = row["timestamp"]
+        self.content: str = row["content"]
+        self.user = BaseUser(row)
 
 
 class Video(VideoListing):
@@ -200,6 +213,33 @@ def get_subbox(user_id: int) -> Optional[list[dict]]:
     try:
         res = db.session.execute(sql["get_subbox"], {
             "user_id": user_id,
+        })
+        if res is None:
+            return None
+        return res.fetchall()
+    except Exception as e:
+        print(e)
+        return None
+
+
+def add_comment(video_id: UUID, user_id: int, content: str) -> bool:
+    try:
+        db.session.execute(sql["add_comment"], {
+            "video_id": video_id,
+            "user_id": user_id,
+            "content": content,
+        })
+        db.session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+
+def get_comments(video_id) -> Optional[list[dict]]:
+    try:
+        res = db.session.execute(sql["get_comments"], {
+            "video_id": video_id,
         })
         if res is None:
             return None
