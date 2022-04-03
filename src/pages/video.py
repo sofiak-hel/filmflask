@@ -1,4 +1,6 @@
 from flask import Blueprint, redirect, request, session, send_file, current_app
+from typing import Optional
+from uuid import UUID
 
 from db.users import AuthUser
 from db.videos import Video, Comment
@@ -91,6 +93,48 @@ def delete_comment():
         return redirect("/watch/%s" % video_id)
     else:
         return error("Failed to delete comment!")
+
+
+@video_bp.route("/rate/thumbsup", methods=["POST"])
+@csrf_token_required()
+@auth_required()
+def thumbsup():
+    return rate_video(1, request.form.get("video_id", None))
+
+
+@video_bp.route("/rate/thumbsdown", methods=["POST"])
+@csrf_token_required()
+@auth_required()
+def thumbsdown():
+    return rate_video(-1, request.form.get("video_id", None))
+
+
+@video_bp.route("/rate/delete", methods=["POST"])
+@csrf_token_required()
+@auth_required()
+def unrate():
+    me = AuthUser.from_session(session)
+
+    video_id = request.form.get("video_id", None)
+    if video_id is None:
+        return error("Failed to get video id!")
+
+    if me.unrate_video(video_id):
+        return redirect("/watch/%s" % video_id)
+    else:
+        return error("Failed to rate video!")
+
+
+def rate_video(rating: int, video_id: Optional[UUID]):
+    me = AuthUser.from_session(session)
+
+    if video_id is None:
+        return error("Failed to get video id!")
+
+    if me.rate_video(video_id, rating):
+        return redirect("/watch/%s" % video_id)
+    else:
+        return error("Failed to rate video!")
 
 
 # Enable for reprocessing

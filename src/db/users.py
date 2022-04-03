@@ -114,6 +114,18 @@ class AuthUser(BaseUser):
             return None
         return res["video_id"]
 
+    def rate_video(self, video_id: UUID, rating: int) -> bool:
+        return rate_video(self.user_id, video_id, rating)
+
+    def unrate_video(self, video_id: UUID) -> bool:
+        return delete_rating(self.user_id, video_id)
+
+    def get_rating(self, video_id: UUID) -> Optional[int]:
+        res = get_rating(self.user_id, video_id)
+        if res is None:
+            return None
+        return res["rating"]
+
     def __str__(self):
         return "%s (@%s). Bio: %s, avatar_id: %s." % (self.nickname, self.handle, self.bio, self.avatar_id)
 
@@ -327,6 +339,47 @@ def delete_comment_safe(comment_id: int, user_id: int) -> Optional[dict]:
             "user_id": user_id,
         })
         db.session.commit()
+        if res is None:
+            return None
+        return res.fetchone()
+    except Exception as e:
+        print(e)
+        return None
+
+
+def rate_video(user_id: int, video_id: UUID, rating: int) -> bool:
+    try:
+        db.session.execute(sql["rate_video"], {
+            "user_id": user_id,
+            "video_id": video_id,
+            "rating": rating,
+        })
+        db.session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+
+def delete_rating(user_id: int, video_id: UUID) -> bool:
+    try:
+        db.session.execute(sql["delete_rating"], {
+            "user_id": user_id,
+            "video_id": video_id,
+        })
+        db.session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+
+def get_rating(user_id: int, video_id: UUID) -> Optional[dict]:
+    try:
+        res = db.session.execute(sql["get_rating"], {
+            "user_id": user_id,
+            "video_id": video_id,
+        })
         if res is None:
             return None
         return res.fetchone()

@@ -15,6 +15,30 @@
     <p>Subscribers: {{ video.uploader.get_subscribers()|length }}</p>
     <img src="/image/{{ video.uploader.avatar_id }}" width=60>
 
+    <p>Likes/Dislikes: {{ video.get_ratings() }}</p>
+    {% if me %}
+    <form action="/rate/thumbsup" method="post">
+        {% include 'csrf_token.html' %}
+        <input type="hidden" name="video_id" value="{{ video.video_id }}">
+        <input type="submit" value="Thumbs up">
+    </form>
+    <form action="/rate/thumbsdown" method="post">
+        {% include 'csrf_token.html' %}
+        <input type="hidden" name="video_id" value="{{ video.video_id }}">
+        <input type="submit" value="Thumbs down">
+    </form>
+    {% set rating = me.get_rating(video.video_id) %}
+    {% if rating %}
+    {% set rating_text = "liked" if rating == 1 else "disliked" %}
+    <p>You've {{ rating_text }} this video. Would you like to remove this rating?</p>
+    <form action="/rate/delete" method="post">
+        {% include 'csrf_token.html' %}
+        <input type="hidden" name="video_id" value="{{ video.video_id }}">
+        <input type="submit" value="Delete rating">
+    </form>
+    {% endif %}
+    {% endif %}
+
     <hr>
     {% if me %}
     <p>Commenting as {{ me.nickname }}</p>

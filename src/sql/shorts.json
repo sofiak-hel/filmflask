@@ -32,5 +32,9 @@
     "get_subscribers": "select user_id from subscriptions where subscribed_id = :user_id",
     "add_comment": "insert into comments (video_id, user_id, content) values (:video_id, :user_id, :content)",
     "get_comments": "select * from comments c left join users u on c.user_id = u.user_id where video_id = :video_id order by timestamp desc",
-    "delete_comment_safe": "delete from comments where comment_id = :comment_id and user_id = :user_id returning video_id"
+    "delete_comment_safe": "delete from comments where comment_id = :comment_id and user_id = :user_id returning video_id",
+    "rate_video": "insert into video_ratings (video_id, user_id, rating) values (:video_id, :user_id, :rating) on conflict (video_id, user_id) do update set rating = :rating",
+    "delete_rating": "delete from video_ratings where video_id = :video_id and user_id = :user_id",
+    "get_ratings": "select rating from video_ratings where video_id = :video_id",
+    "get_rating": "select rating from video_ratings where user_id = :user_id and video_id = :video_id"
 }

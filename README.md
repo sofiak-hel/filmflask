@@ -33,7 +33,7 @@ development of the product.
 - [X] Uploading and viewing videos
     - [X] Must have a title, description and an upload time
     - [X] Commenting to said videos while logged in
-    - [ ] Rating said videos
+    - [X] Rating said videos
 - [X] Subscribing to other users
 - [X] Browsing videos in the front page
   - [X] Including a subbox

@@ -4,7 +4,7 @@ from argon2 import PasswordHasher
 from typing import Optional
 from flask_sqlalchemy import SQLAlchemy
 from datetime import time
-from typing import Optional
+from typing import Optional, Tuple
 from psycopg2 import Binary
 from uuid import UUID
 from datetime import time
@@ -30,28 +30,28 @@ class VideoListing:
     @staticmethod
     def search(search: Optional[str] = None) -> list['VideoListing']:
         if search is not None:
-            res = search_videos(search)
+            res = search_videos(search) or []
         else:
-            res = all_videos()
+            res = all_videos() or []
 
         videos = []
-        for row in (res or []):
+        for row in res:
             videos.append(VideoListing(row))
         return videos
 
     @staticmethod
     def by_uploaders(uploader_ids: list[int]) -> list['VideoListing']:
-        res = get_videos(uploader_ids)
+        res = get_videos(uploader_ids) or []
         videos = []
-        for row in (res or []):
+        for row in res:
             videos.append(VideoListing(row))
         return videos
 
     @staticmethod
     def subbox(user_id: int) -> list['VideoListing']:
-        res = get_subbox(user_id)
+        res = get_subbox(user_id) or []
         videos: list['VideoListing'] = []
-        for row in (res or []):
+        for row in res:
             videos.append(VideoListing(row))
         return videos
 
@@ -63,12 +63,23 @@ class VideoListing:
         return add_comment(self.video_id, user_id, content)
 
     def get_comments(self) -> list['Comment']:
-        res = get_comments(self.video_id)
+        res = get_comments(self.video_id) or []
         comments: list['Comment'] = []
-        for row in (res or []):
+        for row in res:
             comments.append(Comment(row))
 
         return comments
+
+    def get_ratings(self) -> Tuple[int, int]:
+        res: list[dict] = get_ratings(self.video_id) or []
+        ratings: list[int] = []
+        for row in res:
+            ratings.append(row["rating"])
+
+        likes = len([r for r in ratings if r == 1])
+        dislikes = len([r for r in ratings if r == -1])
+
+        return (likes, dislikes)
 
 
 class Comment:
@@ -239,6 +250,19 @@ def add_comment(video_id: UUID, user_id: int, content: str) -> bool:
 def get_comments(video_id) -> Optional[list[dict]]:
     try:
         res = db.session.execute(sql["get_comments"], {
+            "video_id": video_id,
+        })
+        if res is None:
+            return None
+        return res.fetchall()
+    except Exception as e:
+        print(e)
+        return None
+
+
+def get_ratings(video_id: UUID) -> Optional[list[dict]]:
+    try:
+        res = db.session.execute(sql["get_ratings"], {
             "video_id": video_id,
         })
         if res is None:
