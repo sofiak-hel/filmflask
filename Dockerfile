@@ -6,4 +6,4 @@ WORKDIR /filmflask
 COPY . .
 RUN pip install -r requirements.txt
 
-CMD FLASK_APP=src/app.py flask run --host 0.0.0.0
+CMD gunicorn app:app --chdir src -b 0.0.0.0:8080
