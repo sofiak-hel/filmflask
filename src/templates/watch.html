@@ -16,14 +16,10 @@
         </div>
         <p class="timestamp">{{ video.upload_time }}</p>
 
-        <div class="uploader">
+        <div class="user-tag">
             <a href="/user/{{ video.uploader.handle }}">
-                <div class="user-details">
-                    <img src="/image/{{ video.uploader.avatar_id }}" class="avatar">
-                    <span class="nickname">
-                        {{ video.uploader.nickname }}
-                    </span>
-                </div>
+                {% set user = video.uploader %}
+                {% include 'user-detail.html' %}
             </a>
         </div>
 
@@ -57,12 +53,8 @@
             {% if me %}
             <span style="display: inline">Commenting as</span>
             <div class="uploader">
-                <div class="user-details">
-                    <img src="/image/{{ me.avatar_id }}" class="avatar">
-                    <span class="nickname">
-                        {{ me.nickname }}
-                    </span>
-                </div>
+                {% set user = me %}
+                {% include 'user-detail.html' %}
             </div>
             <form action="/comment" method="post">
                 {% include 'csrf_token.html' %}
@@ -76,16 +68,14 @@
             {% endif %}
             {% for comment in video.get_comments() %}
             <div class="comment">
-                <a href="/user/{{ comment.user.handle }}">
-                    <div class="uploader">
-                        <div class="user-details">
-                            <img src="/image/{{ comment.user.avatar_id }}" class="avatar">
-                            <span class="nickname">
-                                {{ comment.user.nickname }}
-                            </span>
+                <div class="user-tag">
+                    <a href="/user/{{ comment.user.handle }}">
+                        <div class="uploader">
+                            {% set user = comment.user %}
+                            {% include 'user-detail.html' %}
                         </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
                 <p class="comment-content">{{ comment.content }}</p>
                 <p class="timestamp">{{ comment.timestamp }}</p>
                 {% if me.user_id == comment.user.user_id %}

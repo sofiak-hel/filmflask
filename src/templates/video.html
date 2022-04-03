@@ -6,12 +6,8 @@
 
     <a href="/user/{{ video.uploader.handle }}">
         <div class="uploader">
-            <div class="user-details">
-                <img src="/image/{{ video.uploader.avatar_id }}" class="avatar">
-                <span class="nickname">
-                    {{ video.uploader.nickname }}
-                </span>
-            </div>
+            {% set user = video.uploader %}
+            {% include 'user-detail.html' %}
         </div>
     </a>
     <p>{{ video.download_counter }} views</p>

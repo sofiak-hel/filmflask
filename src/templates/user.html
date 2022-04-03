@@ -9,12 +9,7 @@
     {% include 'header.html' %}
     <div class="content">
         <div class="user">
-            <div class="user-details">
-                <img src="/image/{{ user.avatar_id }}" class="avatar">
-                <span class="nickname">
-                    {{ user.nickname }}
-                </span>
-            </div>
+            {% include 'user-detail.html' %}
             <p>{{ user.bio }}</p>
             <p>Subscribers: {{ user.get_subscribers()|length }}</p>
             {% if me %}
