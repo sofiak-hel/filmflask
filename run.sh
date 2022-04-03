@@ -1,1 +1,1 @@
-FLASK_APP=src/app.py flask run --port 8080 --host 0.0.0.0
+gunicorn app:app --chdir src -b 0.0.0.0:8080

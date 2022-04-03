@@ -27,7 +27,6 @@ def login():
 
 
 @login_bp.route("/register", methods=["GET", "POST"])
-@csrf_token_required()
 def register():
     user = AuthUser.from_session(session)
     if user is not None:

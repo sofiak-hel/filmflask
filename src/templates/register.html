@@ -11,11 +11,10 @@
 
 <body>
     <form action="" method="post">
-        {% include 'csrf_token.html' %}
         <label for="username">Handle: </label>
         <input type="text" name="username" id="username" minlength="{{ config.HANDLE_MIN_LENGTH }}"
             maxlength="{{ config.HANDLE_MAX_LENGTH }}" pattern="([A-z0-9])+"
-            placeholder=" {{ config.HANDLE_MIN_LENGTH }} - {{ config.HANDLE_MAX_LENGTH }} chaacters" required> </br>
+            placeholder=" {{ config.HANDLE_MIN_LENGTH }} - {{ config.HANDLE_MAX_LENGTH }} characters" required> </br>
         <label for="nickname">What do you want us to call you? </label>
         <input type="text" name="nickname" id="nickname" minlength="{{ config.NICKNAME_MIN_LENGTH }}"
             maxlength="{{ config.NICKNAME_MAX_LENGTH }}"
