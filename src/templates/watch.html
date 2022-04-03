@@ -56,7 +56,7 @@
     {% for comment in video.get_comments() %}
     <div>
         <img src="/image/{{ comment.user.avatar_id }}" width=100>
-        <p><a href="/user/{{ video.uploader.handle }}">{{ comment.user.nickname }} (@{{ comment.user.handle }}):</a>
+        <p><a href="/user/{{ comment.user.handle }}">{{ comment.user.nickname }} (@{{ comment.user.handle }}):</a>
         </p>
         <p>{{ comment.content }}</p>
         <p>{{ comment.timestamp }}</p>
