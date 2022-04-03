@@ -14,17 +14,20 @@
             <p class="views">{{ video.download_counter }} views</p>
             <p class="ratings">Likes/Dislikes: {{ video.get_ratings() }}</p>
         </div>
-        <p class="video-description">{{ video.description }}</p>
         <p class="timestamp">{{ video.upload_time }}</p>
 
         <div class="uploader">
-            <div class="user-details">
-                <img src="/image/{{ video.uploader.avatar_id }}" class="avatar">
-                <span class="nickname">
-                    {{ video.uploader.nickname }}
-                </span>
-            </div>
+            <a href="/user/{{ video.uploader.handle }}">
+                <div class="user-details">
+                    <img src="/image/{{ video.uploader.avatar_id }}" class="avatar">
+                    <span class="nickname">
+                        {{ video.uploader.nickname }}
+                    </span>
+                </div>
+            </a>
         </div>
+
+        <p class="video-description">{{ video.description }}</p>
         {% if me %}
         <div class="rating-buttons">
             <form action="/rate/thumbsup" method="post">
@@ -73,7 +76,7 @@
             {% endif %}
             {% for comment in video.get_comments() %}
             <div class="comment">
-                <a href="/user/{{ video.uploader.handle }}">
+                <a href="/user/{{ comment.user.handle }}">
                     <div class="uploader">
                         <div class="user-details">
                             <img src="/image/{{ comment.user.avatar_id }}" class="avatar">
