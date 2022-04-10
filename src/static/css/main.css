@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -15,7 +17,7 @@
 
     width: 100%;
     height: 100%;
-    font-family: sans-serif;
+    font-family: 'Arimo';
     background-color: #222;
     color: white;
 }
@@ -277,71 +279,82 @@ button.icon-button:not([disabled]):active {
     font-style: italic;
 }
 
-form.form {
+.form {
     max-width: 30em;
     min-width: 20rem;
 }
 
-form.form.small {
+.form.small {
     max-width: 20rem;
     min-width: 10rem;
 }
 
-form.form.small .field {
+.form.small .field {
     grid-template-columns: minmax(30%, 4em) auto;
 }
 
-form.form .field {
+.form .field {
     display: grid;
     grid-template-columns: minmax(30%, 10em) auto;
     grid-gap: 0.5em;
 }
 
-form.form .field.size-1 {
+.form .field.size-1 {
     width: 100%;
     display: grid;
     grid-template-columns: auto;
 }
 
-form.form .field .font-big {
+.form .field .font-big {
     font-size: 1.5rem;
 }
 
-form.form input[type="text"],
+.form input[type="text"],
 input[type="password"],
-form.form textarea {
+.form textarea {
     width: 100%;
 }
 
-form.form textarea {
+.form textarea {
     height: 5em;
 }
 
-form.form .field input,
-form.form .field textarea {
+.form .field input,
+.form .field textarea {
     font-size: 1rem;
     font-family: sans-serif;
     resize: none;
 }
 
-form.form .field label {
+.form .field label {
     margin: auto;
 }
 
-form.form .field input[type="submit"] {
+.form .field input[type="submit"] {
     margin: auto;
     padding-left: 2em;
     padding-right: 2em;
 }
 
-form.form .field #video-description {
+.form .field #video-description {
     margin: auto;
 }
 
-form.form .button {
+.form .button {
     margin: 1rem;
 }
 
 .form.comment-form input[type="submit"] {
     margin: 0;
+}
+
+.error-message {
+    background: #c8312a;
+    padding: 0.5em;
+    padding-left: 0.5em;
+    border-radius: 1em;
+    margin: 0.5em;
+    padding-left: 2em;
+    font-weight: bold;
+    text-align: center;
 }

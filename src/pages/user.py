@@ -14,9 +14,9 @@ user_bp = Blueprint('user_page', __name__,
 def user(handle):
     me = AuthUser.from_session(session)
     user = BaseUser.from_handle(handle)
-    videos = Video.by_uploaders([user.user_id])
     if user is None:
         return error("No such user!")
+    videos = Video.by_uploaders([user.user_id])
     return render_template("user.html", user=user, me=me, videos=videos)
 
 

@@ -71,37 +71,20 @@
                 {% set user = me %}
                 {% include 'components/user-detail.html' %}
             </div>
-            <form action="/comment" method="post" class="form comment-form">
-                {% include 'components/csrf_token.html' %}
-                <input type="hidden" name="comment_video_id" id="comment_video_id" value="{{ video.video_id }}">
-                <div class="field size-1">
-                    <textarea name="content" id="content" minlength="1" maxlength="{{ config.COMMENT_MAX_LENGTH }}"
-                        required></textarea> </br>
-                </div>
-                <input type="submit" value="Comment" class="button">
-            </form>
-            {% else %}
-            <p>You must be <a href="/login">logged in</a> to post a comment!</p>
-            {% endif %}
-            {% for comment in video.get_comments() %}
-            <div class="comment">
-                <div class="user-tag">
-                    <a href="/user/{{ comment.user.handle }}">
-                        <div class="uploader">
-                            {% set user = comment.user %}
-                            {% include 'components/user-detail.html' %}
-                        </div>
-                    </a>
-                </div>
-                <p class="comment-content">{{ comment.content }}</p>
-                <p class="timestamp">{{ comment.timestamp }}</p>
-                {% if me.user_id == comment.user.user_id %}
-                <div class="delete-button">
-                    <button class="icon-button"><i class="fa fa-trash-o fa-lg"></i></button>
-                </div>
-                {% endif %}
+            <div class="form comment-form">
+                <textarea name="content" id="comment-content" minlength="1" maxlength="{{ config.COMMENT_MAX_LENGTH }}"
+                    required></textarea> </br>
+                <button class="button" onclick="add_comment('{{video.video_id}}')">Comment</button>
             </div>
-            {% endfor %}
+            {% else %}
+            <p>You must be <a href="/login?redirect={{ url_for(request.endpoint, **request.view_args) }}">logged
+                    in</a>
+                to post a comment!</p>
+            {% endif %}
+            {% set comments = video.get_comments() %}
+            <div id="comments">
+                {% include 'components/comments.html' %}
+            </div>
         </div>
     </div>
     {% include 'components/footer.html' %}

@@ -1,0 +1,20 @@
+{% for comment in comments %}
+<div class="comment" id="comment-{{ comment.comment_id }}">
+    <div class="user-tag">
+        <a href="/user/{{ comment.user.handle }}">
+            <div class="uploader">
+                {% set user = comment.user %}
+                {% include 'components/user-detail.html' %}
+            </div>
+        </a>
+    </div>
+    <p class="comment-content">{{ comment.content }}</p>
+    <p class="timestamp">{{ comment.timestamp }}</p>
+    {% if me.user_id == comment.user.user_id %}
+    <div class="delete-button">
+        <button onclick="delete_comment('{{comment.comment_id}}')" class="icon-button"><i
+                class="fa fa-trash-o fa-lg"></i></button>
+    </div>
+    {% endif %}
+</div>
+{% endfor %}

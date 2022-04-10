@@ -24,7 +24,7 @@ def video_upload():
         title: str = request.form.get("title", "").strip()
         description: str = request.form.get("description", "").strip()
         if len(title) < current_app.config["VIDEO_TITLE_MIN_LENGTH"] or len(title) > current_app.config["VIDEO_TITLE_MAX_LENGTH"]:
-            return error("Video title must be between %s and %s characters long" % (current_app.config["VIDEO_TITLE_MIN_LENGTH"], current_app.config["VIDEO_TITLE_MAX_LENGTH"]))
+            return error("Video title must be between %s and %s characters long" % (current_app.config["VIDEO_TITLE_MIN_LENGTH"], current_app.config["VIDEO_TITLE_MAX_LENGTH"]), "/upload")
 
         f = request.files.get("video", None)
         if f.filename == '':
@@ -73,13 +73,14 @@ def comment():
     if len(content) == 0:
         return error("Comment must not be empty!")
 
-    if not video.add_comment(me.user_id, content):
+    comment_id = video.add_comment(me.user_id, content)
+    if not comment_id:
         return error("Failed to add comment!")
 
-    return redirect("/watch/%s" % video.video_id)
+    return jsonify({"comment_id": comment_id})
 
 
-@video_bp.route("/comment/delete", methods=["POST"])
+@video_bp.route("/comment", methods=["DELETE"])
 @csrf_token_required()
 @auth_required()
 def delete_comment():
@@ -131,7 +132,23 @@ def get_ratings(video_id):
     if video_id is None:
         return error("Failed to get video id!")
 
-    return jsonify(Video.from_id(video_id).get_ratings())
+    video = Video.from_id(video_id)
+    if video is None:
+        return error("No such video")
+    return jsonify(video.get_ratings())
+
+
+@video_bp.route("/comments/<video_id>", methods=["GET"])
+def get_comments(video_id):
+    me = AuthUser.from_session(session)
+    if video_id is None:
+        return error("Failed to get video id!")
+
+    video = Video.from_id(video_id)
+    if video is None:
+        return error("No such video")
+
+    return render_template("components/comments.html", comments=video.get_comments(), me=me)
 
 
 def rate_video(rating: int, video_id: Optional[UUID]):

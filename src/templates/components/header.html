@@ -15,7 +15,8 @@
             <p>{{ me.nickname }}</p>
             <img class="avatar" src="/image/{{ me.avatar_id }}">
         </a>
-        <form action="/logout" method="post" class="logout">
+        <form action="/logout?redirect={{ url_for(request.endpoint, **request.view_args) }}" method="post"
+            class="logout">
             {% include 'components/csrf_token.html' %}
             <input type="submit" value="Logout" class="button">
         </form>
@@ -23,7 +24,7 @@
         <div></div>
         <div></div>
         <div class="login">
-            <a href="/login">Log in</a>
+            <a href="/login?redirect={{ url_for(request.endpoint, **request.view_args) }}">Log in</a>
         </div>
         {% endif %}
     </div>

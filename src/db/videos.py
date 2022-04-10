@@ -59,8 +59,11 @@ class VideoListing:
         self.download_counter += 1
         return add_download(self.video_id)
 
-    def add_comment(self, user_id: int, content: str) -> bool:
-        return add_comment(self.video_id, user_id, content)
+    def add_comment(self, user_id: int, content: str) -> Optional[str]:
+        res = add_comment(self.video_id, user_id, content)
+        if res is None:
+            return None
+        return res["comment_id"]
 
     def get_comments(self) -> list['Comment']:
         res = get_comments(self.video_id) or []
@@ -233,18 +236,20 @@ def get_subbox(user_id: int) -> Optional[list[dict]]:
         return None
 
 
-def add_comment(video_id: UUID, user_id: int, content: str) -> bool:
+def add_comment(video_id: UUID, user_id: int, content: str) -> Optional[dict]:
     try:
-        db.session.execute(sql["add_comment"], {
+        res = db.session.execute(sql["add_comment"], {
             "video_id": video_id,
             "user_id": user_id,
             "content": content,
         })
         db.session.commit()
-        return True
+        if res is None:
+            return None
+        return res.fetchone()
     except Exception as e:
         print(e)
-        return False
+        return None
 
 
 def get_comments(video_id) -> Optional[list[dict]]:

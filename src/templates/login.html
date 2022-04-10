@@ -8,7 +8,9 @@
 <body>
     {% include 'components/header.html' %}
     <div class="content">
+        {% include 'components/error.html' %}
         <form action="" method="post" class="form small">
+            <input type="hidden" name="redirect" id="redirect" value="{{redirect}}">
             <div class="field">
                 <label for="username">Handle: </label>
                 <input type="text" name="username" id="username"></br>

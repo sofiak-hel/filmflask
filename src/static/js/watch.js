@@ -12,14 +12,14 @@ async function thumbsup(video_id) {
         curr_rating = 1;
     }
     if (res.status === 500) {
-        console.log((await res.json()).message);
+        alert((await res.json()).message)
+        return
     } else {
         update_ratings(video_id);
     }
 }
 
 async function thumbsdown(video_id) {
-
     if (curr_rating === -1) {
         res = await request('/rate/delete', {
             video_id,
@@ -32,10 +32,35 @@ async function thumbsdown(video_id) {
         curr_rating = -1;
     }
     if (res.status === 500) {
-        console.log((await res.json()).message);
+        alert((await res.json()).message)
+        return
     } else {
         update_ratings(video_id);
     }
+}
+
+async function add_comment(video_id) {
+    const content = document.getElementById('comment-content');
+    res = await request('/comment', {
+        comment_video_id: video_id,
+        content: content.value,
+    }, 'POST')
+    if (res.status === 500) {
+        alert((await res.json()).message)
+        return
+    }
+
+    content.value = "";
+
+    comments = await (await fetch(`/comments/${video_id}`)).text()
+    document.getElementById(`comments`).innerHTML = comments;
+}
+
+async function delete_comment(comment_id) {
+    res = await request('/comment', {
+        comment_id,
+    }, 'DELETE');
+    document.getElementById(`comment-${comment_id}`).remove();
 }
 
 async function update_ratings(video_id) {
@@ -52,7 +77,7 @@ async function update_ratings(video_id) {
     thumbsdown.classList.add((curr_rating === -1) ? 'fa-thumbs-down' : 'fa-thumbs-o-down');
 }
 
-async function request(url, data) {
+async function request(url, data, method = 'POST') {
     const csrf_token = document.getElementsByName('csrf')[0].content;
     data = { csrf_token, ...data };
 
@@ -61,7 +86,10 @@ async function request(url, data) {
         formData.append(key, data[key]);
     }
     return fetch(url, {
-        method: 'POST',
+        method,
         body: formData,
+        headers: {
+            accept: "application/json"
+        }
     });
 }
