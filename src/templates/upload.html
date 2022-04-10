@@ -6,11 +6,11 @@
 </head>
 
 <body>
-    {% include 'header.html' %}
+    {% include 'components/header.html' %}
     <div class="content">
         <h1>Upload video</h1>
         <form action="/upload" method="post" enctype="multipart/form-data">
-            {% include 'csrf_token.html' %}
+            {% include 'components/csrf_token.html' %}
             <label for="video">Video: </label>
             <input type="file" name="video" id="video" accept="video/mp4, video/webm" required></br>
             <label for="title" minlength="{{ config.VIDEO_TITLE_MIN_LENGTH }}"
@@ -22,6 +22,7 @@
             <input type="submit" value="Upload" class="button">
         </form>
     </div>
+    {% include 'components/footer.html' %}
 </body>
 
 </html>

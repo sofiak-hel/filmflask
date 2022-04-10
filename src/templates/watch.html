@@ -6,7 +6,7 @@
 </head>
 
 <body>
-    {% include 'header.html' %}
+    {% include 'components/header.html' %}
     <div class="content">
         <video autoplay="true" src="/video/{{ video.video_id }}" controls=true height="480"></video>
         <h1>{{ video.title }}</h1>
@@ -19,7 +19,7 @@
         <div class="user-tag">
             <a href="/user/{{ video.uploader.handle }}">
                 {% set user = video.uploader %}
-                {% include 'user-detail.html' %}
+                {% include 'components/user-detail.html' %}
             </a>
         </div>
 
@@ -27,12 +27,12 @@
         {% if me %}
         <div class="rating-buttons">
             <form action="/rate/thumbsup" method="post">
-                {% include 'csrf_token.html' %}
+                {% include 'components/csrf_token.html' %}
                 <input type="hidden" name="video_id" value="{{ video.video_id }}">
                 <input type="submit" value="Thumbs up" class="button">
             </form>
             <form action="/rate/thumbsdown" method="post">
-                {% include 'csrf_token.html' %}
+                {% include 'components/csrf_token.html' %}
                 <input type="hidden" name="video_id" value="{{ video.video_id }}">
                 <input type="submit" value="Thumbs down" class="button">
             </form>
@@ -40,7 +40,7 @@
             {% if rating %}
             {% set rating_text = "liked" if rating == 1 else "disliked" %}
             <form action="/rate/delete" method="post">
-                {% include 'csrf_token.html' %}
+                {% include 'components/csrf_token.html' %}
                 <input type="hidden" name="video_id" value="{{ video.video_id }}">
                 <input type="submit" value="Delete rating" class="button">
             </form>
@@ -54,10 +54,10 @@
             <span style="display: inline">Commenting as</span>
             <div class="uploader">
                 {% set user = me %}
-                {% include 'user-detail.html' %}
+                {% include 'components/user-detail.html' %}
             </div>
             <form action="/comment" method="post">
-                {% include 'csrf_token.html' %}
+                {% include 'components/csrf_token.html' %}
                 <input type="hidden" name="comment_video_id" id="comment_video_id" value="{{ video.video_id }}">
                 <textarea name="content" id="content" minlength="1" maxlength="{{ config.COMMENT_MAX_LENGTH }}"
                     required></textarea> </br>
@@ -90,6 +90,7 @@
             {% endfor %}
         </div>
     </div>
+    {% include 'components/footer.html' %}
 
 </body>
 

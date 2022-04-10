@@ -10,20 +10,24 @@
     --accent-color: #f74716;
     --accent-color-hover: #d02000;
     --accent-color-active: #c01000;
-    
+
     accent-color: var(--accent-color);
 
-    height: 100%;
     width: 100%;
+    height: 100%;
     font-family: sans-serif;
     background-color: #222;
     color: white;
-    
+}
+
+body {
+    min-height: 100%;
+    position: relative;
 }
 
 a {
     text-decoration: none;
-    color:var(--accent-color);
+    color: var(--accent-color);
 }
 
 header {
@@ -36,6 +40,23 @@ header {
     padding-left: 1.5rem;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #111;
+    border-top: 5px solid #111;
+    text-align: center;
+    font-size: 1.3rem;
+    height: 3rem;
+    display: grid;
+}
+
+footer div {
+    margin: auto;
 }
 
 header .me {
@@ -59,11 +80,11 @@ header .me .profile {
     font-size: 1.5rem;
 }
 
-header .me .profile > img {
+header .me .profile>img {
     margin-left: 1rem;
 }
 
-header .me .profile > * {
+header .me .profile>* {
     margin: auto;
 }
 
@@ -117,6 +138,7 @@ header .search input {
     padding-top: 4rem;
     width: 70%;
     margin: auto;
+    padding-bottom: 5rem;
 }
 
 .content .video-list {
@@ -124,15 +146,15 @@ header .search input {
     grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
- .video {
+.video {
     padding: 0.5rem;
 }
 
- .video > a {
+.video>a {
     width: 100%;
 }
 
- .video .thumbnail {
+.video .thumbnail {
     width: 100%;
 }
 
@@ -158,7 +180,7 @@ img {
     font-size: 2.5em;
 }
 
-.user > p {
+.user>p {
     margin: 1em;
 }
 
@@ -188,7 +210,7 @@ img {
 }
 
 .video-details {
-    display:grid;
+    display: grid;
     grid-template-columns: 1fr 1fr;
     width: 854px;
 }
@@ -218,7 +240,7 @@ img {
     background-color: var(--main-bg-darker);
 }
 
-.comment > p {
+.comment>p {
     margin: 0.5rem;
 }
 

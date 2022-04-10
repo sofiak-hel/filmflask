@@ -16,7 +16,7 @@
             <img class="avatar" src="/image/{{ me.avatar_id }}">
         </a>
         <form action="/logout" method="post" class="logout">
-            {% include 'csrf_token.html' %}
+            {% include 'components/csrf_token.html' %}
             <input type="submit" value="Logout" class="button">
         </form>
         {% else %}

@@ -7,7 +7,7 @@
     <a href="/user/{{ video.uploader.handle }}">
         <div class="uploader">
             {% set user = video.uploader %}
-            {% include 'user-detail.html' %}
+            {% include 'components/user-detail.html' %}
         </div>
     </a>
     <p>{{ video.download_counter }} views</p>
