@@ -56,11 +56,13 @@
                 {% set user = me %}
                 {% include 'components/user-detail.html' %}
             </div>
-            <form action="/comment" method="post">
+            <form action="/comment" method="post" class="form comment-form">
                 {% include 'components/csrf_token.html' %}
                 <input type="hidden" name="comment_video_id" id="comment_video_id" value="{{ video.video_id }}">
-                <textarea name="content" id="content" minlength="1" maxlength="{{ config.COMMENT_MAX_LENGTH }}"
-                    required></textarea> </br>
+                <div class="field size-1">
+                    <textarea name="content" id="content" minlength="1" maxlength="{{ config.COMMENT_MAX_LENGTH }}"
+                        required></textarea> </br>
+                </div>
                 <input type="submit" value="Comment" class="button">
             </form>
             {% else %}
@@ -72,7 +74,7 @@
                     <a href="/user/{{ comment.user.handle }}">
                         <div class="uploader">
                             {% set user = comment.user %}
-                            {% include 'user-detail.html' %}
+                            {% include 'components/user-detail.html' %}
                         </div>
                     </a>
                 </div>
@@ -81,7 +83,7 @@
                 {% if me.user_id == comment.user.user_id %}
 
                 <form action="/comment/delete" method="post">
-                    {% include 'csrf_token.html' %}
+                    {% include 'components/csrf_token.html' %}
                     <input type="hidden" name="comment_id" value="{{ comment.comment_id }}">
                     <input type="submit" value="Delete comment" class="button">
                 </form>

@@ -9,17 +9,27 @@
     {% include 'components/header.html' %}
     <div class="content">
         <h1>Upload video</h1>
-        <form action="/upload" method="post" enctype="multipart/form-data">
+        <form action="/upload" method="post" enctype="multipart/form-data" class="form">
             {% include 'components/csrf_token.html' %}
-            <label for="video">Video: </label>
-            <input type="file" name="video" id="video" accept="video/mp4, video/webm" required></br>
-            <label for="title" minlength="{{ config.VIDEO_TITLE_MIN_LENGTH }}"
-                maxlength="{{ config.VIDEO_TITLE_MAX_LENGTH }}" required>Video title: </label>
-            <input type="text" name="title" id="title"
-                placeholder="{{ config.VIDEO_TITLE_MIN_LENGTH }} - {{ config.VIDEO_TITLE_MAX_LENGTH }} characters"></br>
-            <label for="description">Description: </label>
-            <textarea name="description" id="description"></textarea></br>
-            <input type="submit" value="Upload" class="button">
+            <div class="field">
+                <label for="title" minlength="{{ config.VIDEO_TITLE_MIN_LENGTH }}"
+                    maxlength="{{ config.VIDEO_TITLE_MAX_LENGTH }}" required>Video title: </label>
+                <input class="font-big" type="text" name="title" id="title"
+                    placeholder="{{ config.VIDEO_TITLE_MIN_LENGTH }} - {{ config.VIDEO_TITLE_MAX_LENGTH }} characters"></br>
+            </div>
+            <div class="field">
+                <label for="description">Description: </label>
+                <textarea name="description" id="description" maxlength="{{ config.COMMENT_MAX_LENGTH}}"
+                    placeholder="Up to {{ config.COMMENT_MAX_LENGTH}} characters"></textarea></br>
+            </div>
+            <div class="field">
+                <label for="video" class="button">Select video</label>
+                <p id="video-description">No video selected</p>
+            </div>
+            <input type="file" name="video" id="video" accept="video/mp4, video/webm" hidden required></br>
+            <div class="field size-1">
+                <input type="submit" value="Upload" class="button">
+            </div>
         </form>
     </div>
     {% include 'components/footer.html' %}
