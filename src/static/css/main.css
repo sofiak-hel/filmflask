@@ -227,12 +227,12 @@ button.icon-button {
     outline: none;
 }
 
-button.icon-button[disabled="false"]:hover {
+button.icon-button:not([disabled]):hover {
     color: var(--accent-color-hover);
 }
 
 
-button.icon-button[disabled="false"]:active {
+button.icon-button:not([disabled]):active {
     color: var(--accent-color-active);
 }
 

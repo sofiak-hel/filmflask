@@ -2,9 +2,19 @@
 
 <head>
     <title>{{ video.title }}</title>
+    {% set rating = 0 %}
+    {% if me %}
+    {% set rating = me.get_rating(video.video_id) %}
+    {% endif %}
+    <script>
+        let curr_rating = parseInt('{{ rating }}');
+    </script>
+    <script src="{{ url_for('static',filename='js/watch.js') }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css"
         integrity="sha256-XoaMnoYC5TH6/+ihMEnospgm0J1PM/nioxbOUdnM8HY=" crossorigin="anonymous">
+
+    <meta name="csrf" content="{{ csrf_token }}">
 </head>
 
 <body>
@@ -19,13 +29,28 @@
                     }}</span>
             </div>
             {% set ratings = video.get_ratings() %}
+
             <div class="ratings">
-                <span><button class="icon-button" disabled="{{me == None}}"><i
-                            class="fa fa-thumbs-o-up fa-lg"></i></button> {{ ratings[1]
-                    }}</span>
-                <span><button class="icon-button" disabled="{{me == None}}"><i
-                            class="fa fa-thumbs-o-down fa-lg"></i></button> {{ ratings[0]
-                    }}</span>
+                <span><button class="icon-button" {% if not me %} disabled="true" {% endif %}
+                        onclick="thumbsup('{{video.video_id}}')">
+                        {% if rating == 1 %}
+                        <i id="thumbsup-icon" class="fa fa-thumbs-up fa-lg"></i>
+                        {% else %}
+                        <i id="thumbsup-icon" class="fa fa-thumbs-o-up fa-lg"></i>
+                        {% endif %}
+                    </button>
+                    <span id="thumbsups">{{ ratings[0] }}</span>
+                </span>
+                <span><button class="icon-button" {% if not me %} disabled="true" {% endif %}
+                        onclick="thumbsdown('{{video.video_id}}')">
+                        {% if rating == -1 %}
+                        <i id="thumbsdown-icon" class="fa fa-thumbs-down fa-lg"></i>
+                        {% else %}
+                        <i id="thumbsdown-icon" class="fa fa-thumbs-o-down fa-lg"></i>
+                        {% endif %}
+                    </button>
+                    <span id="thumbsdowns">{{ ratings[1] }}</span>
+                </span>
             </div>
         </div>
 
@@ -72,7 +97,7 @@
                 <p class="timestamp">{{ comment.timestamp }}</p>
                 {% if me.user_id == comment.user.user_id %}
                 <div class="delete-button">
-                    <button class="icon-button" disabled="false"><i class="fa fa-trash-o fa-lg"></i></button>
+                    <button class="icon-button"><i class="fa fa-trash-o fa-lg"></i></button>
                 </div>
                 {% endif %}
             </div>

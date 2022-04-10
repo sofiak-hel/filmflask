@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, request, session, send_file, current_app
+from flask import Blueprint, redirect, request, session, send_file, current_app, jsonify
 from typing import Optional
 from uuid import UUID
 
@@ -123,6 +123,15 @@ def unrate():
         return redirect("/watch/%s" % video_id)
     else:
         return error("Failed to rate video!")
+
+
+@video_bp.route("/rate/get/<video_id>", methods=["GET"])
+@csrf_token_required()
+def get_ratings(video_id):
+    if video_id is None:
+        return error("Failed to get video id!")
+
+    return jsonify(Video.from_id(video_id).get_ratings())
 
 
 def rate_video(rating: int, video_id: Optional[UUID]):

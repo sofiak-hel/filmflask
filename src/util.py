@@ -1,4 +1,4 @@
-from flask import render_template as flask_template, request, session, redirect
+from flask import render_template as flask_template, request, session, redirect, jsonify
 import ffmpeg
 import tempfile
 from typing import Any, Callable
@@ -10,7 +10,10 @@ from db.users import AuthUser
 
 def error(error: str):
     me = AuthUser.from_session(session)
-    return render_template("error.html", me=me, error=error)
+    err = {
+        "message": error
+    }
+    return jsonify(err), 500
 
 
 def process_image(blob: bytes):
