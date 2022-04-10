@@ -28,9 +28,9 @@ def video_upload():
 
         f = request.files.get("video", None)
         if f.filename == '':
-            return redirect("/upload")
+            return error("No video!", "/upload")
         if not f.mimetype.startswith("video/"):
-            return error("Uploaded content must be an image!")
+            return error("Uploaded content must be a video!", "/upload")
 
         video = Video.upload(user, title, description, f.read())
         if video is not None:

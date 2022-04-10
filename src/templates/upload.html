@@ -3,9 +3,11 @@
 <head>
     <title>Upload video</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
+    <script src="{{ url_for('static',filename='js/fileupload.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/upload.js') }}"></script>
 </head>
 
-<body>
+<body onload="onload()">
     {% include 'components/header.html' %}
     <div class="content">
         {% include 'components/error.html' %}
@@ -14,22 +16,25 @@
             {% include 'components/csrf_token.html' %}
             <div class="field">
                 <label for="title" minlength="{{ config.VIDEO_TITLE_MIN_LENGTH }}"
-                    maxlength="{{ config.VIDEO_TITLE_MAX_LENGTH }}" required>Video title: </label>
-                <input class="font-big" type="text" name="title" id="title"
+                    maxlength="{{ config.VIDEO_TITLE_MAX_LENGTH }}">Video title: </label>
+                <input class="font-big" type="text" name="title" id="title" required
                     placeholder="{{ config.VIDEO_TITLE_MIN_LENGTH }} - {{ config.VIDEO_TITLE_MAX_LENGTH }} characters"></br>
             </div>
             <div class="field">
                 <label for="description">Description: </label>
-                <textarea name="description" id="description" maxlength="{{ config.COMMENT_MAX_LENGTH}}"
+                <textarea name="description" id="description" maxlength="{{ config.COMMENT_MAX_LENGTH}}" required
                     placeholder="Up to {{ config.COMMENT_MAX_LENGTH}} characters"></textarea></br>
             </div>
             <div class="field">
                 <label for="video" class="button">Select video</label>
-                <p id="video-description">No video selected</p>
+                <div>
+                    <p id="video-name">No video selected</p>
+                    <p id="video-description"></p>
+                </div>
             </div>
-            <input type="file" name="video" id="video" accept="video/mp4, video/webm" hidden required></br>
+            <input type="file" name="video" id="video" accept="video/mp4, video/webm" hidden></br>
             <div class="field size-1">
-                <input type="submit" value="Upload" class="button">
+                <input id="upload" type="submit" value="Upload" class="button">
             </div>
         </form>
     </div>
