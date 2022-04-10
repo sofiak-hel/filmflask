@@ -219,6 +219,23 @@ img {
     text-align: right;
 }
 
+button.icon-button {
+    padding: 0.3rem;
+    background: none;
+    color: var(--accent-color);
+    border: none;
+    outline: none;
+}
+
+button.icon-button[disabled="false"]:hover {
+    color: var(--accent-color-hover);
+}
+
+
+button.icon-button[disabled="false"]:active {
+    color: var(--accent-color-active);
+}
+
 .rating-buttons {
     display: grid;
     grid-template-columns: auto auto auto;
@@ -234,10 +251,17 @@ img {
 }
 
 .comment {
+    position: relative;
     padding: 0.5em;
     margin: 0.5em;
     border-radius: 0.5rem;
     background-color: var(--main-bg-darker);
+}
+
+.comment .delete-button {
+    position: absolute;
+    top: 0.5em;
+    right: 0.5em;
 }
 
 .comment>p {

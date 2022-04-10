@@ -3,6 +3,8 @@
 <head>
     <title>{{ video.title }}</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css"
+        integrity="sha256-XoaMnoYC5TH6/+ihMEnospgm0J1PM/nioxbOUdnM8HY=" crossorigin="anonymous">
 </head>
 
 <body>
@@ -11,10 +13,22 @@
         <video autoplay="true" src="/video/{{ video.video_id }}" controls=true height="480"></video>
         <h1>{{ video.title }}</h1>
         <div class="video-details">
-            <p class="views">{{ video.download_counter }} views</p>
-            <p class="ratings">Likes/Dislikes: {{ video.get_ratings() }}</p>
+            <div>
+                <span class="views">{{ video.download_counter }} views</span> <span class="timestamp">{{
+                    video.upload_time
+                    }}</span>
+            </div>
+            {% set ratings = video.get_ratings() %}
+            <div class="ratings">
+                <span><button class="icon-button" disabled="{{me == None}}"><i
+                            class="fa fa-thumbs-o-up fa-lg"></i></button> {{ ratings[1]
+                    }}</span>
+                <span><button class="icon-button" disabled="{{me == None}}"><i
+                            class="fa fa-thumbs-o-down fa-lg"></i></button> {{ ratings[0]
+                    }}</span>
+            </div>
         </div>
-        <p class="timestamp">{{ video.upload_time }}</p>
+
 
         <div class="user-tag">
             <a href="/user/{{ video.uploader.handle }}">
@@ -24,30 +38,6 @@
         </div>
 
         <p class="video-description">{{ video.description }}</p>
-        {% if me %}
-        <div class="rating-buttons">
-            <form action="/rate/thumbsup" method="post">
-                {% include 'components/csrf_token.html' %}
-                <input type="hidden" name="video_id" value="{{ video.video_id }}">
-                <input type="submit" value="Thumbs up" class="button">
-            </form>
-            <form action="/rate/thumbsdown" method="post">
-                {% include 'components/csrf_token.html' %}
-                <input type="hidden" name="video_id" value="{{ video.video_id }}">
-                <input type="submit" value="Thumbs down" class="button">
-            </form>
-            {% set rating = me.get_rating(video.video_id) %}
-            {% if rating %}
-            {% set rating_text = "liked" if rating == 1 else "disliked" %}
-            <form action="/rate/delete" method="post">
-                {% include 'components/csrf_token.html' %}
-                <input type="hidden" name="video_id" value="{{ video.video_id }}">
-                <input type="submit" value="Delete rating" class="button">
-            </form>
-            {% endif %}
-        </div>
-
-        {% endif %}
 
         <div class="comment-section">
             {% if me %}
@@ -81,12 +71,9 @@
                 <p class="comment-content">{{ comment.content }}</p>
                 <p class="timestamp">{{ comment.timestamp }}</p>
                 {% if me.user_id == comment.user.user_id %}
-
-                <form action="/comment/delete" method="post">
-                    {% include 'components/csrf_token.html' %}
-                    <input type="hidden" name="comment_id" value="{{ comment.comment_id }}">
-                    <input type="submit" value="Delete comment" class="button">
-                </form>
+                <div class="delete-button">
+                    <button class="icon-button" disabled="false"><i class="fa fa-trash-o fa-lg"></i></button>
+                </div>
                 {% endif %}
             </div>
             {% endfor %}
