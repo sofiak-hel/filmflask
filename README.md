@@ -40,6 +40,28 @@ around 200 videos of max size into the database.
 
 ## Progress, features and what is to come:
 
+## Todo's since Välipalautus 2:
+- [X] Currently the frontend is very clunky to use and very ugly. I would like to
+  add more CSS and use more JavaScript to make the experience more smooth.
+    - CSS has been slightly improved, and the user-experience as a whole has
+      been improved by quite a bit with a little bit of javascript
+- [ ] Default avatars for users. Unsure if this should be done client-side or
+  serverside.
+- [ ] It would be useful, if the user could delete their videos after they have been
+  uploaded.
+- [ ] I want to add a role-system. Currently it already exists in the database, but
+  is not used at all. This would allow some administrative actions without
+  needing to do so through `psql` manually.
+  - [ ] There is also a flag in the database for a deleted user, but it is not
+    currently used. The idea is that a user could be "soft-deleted" through the
+    admin-interface, so that they, their videos, comments or ratings are no
+    longer visible. The user could still be re-instated if so desired.
+- [ ] I would like to add the possibility of editing video titles and descriptions
+  even after they have been uploaded.
+- [ ] Playlists and rating comments from the wanted features are also still missing,
+  I would like to see those.
+- [ ] If I have the time, email notifications would be a nice addition as well.
+
 ### Välipalautus 2
 By Välipalautus 2 the project is looking pretty good already. 
 
@@ -81,22 +103,8 @@ By Välipalautus 2 the project is looking pretty good already.
   logged in to do so.
 
 **What I would still like add or modify:**
-- Currently the frontend is very clunky to use and very ugly. I would like to
-  add more CSS and use more JavaScript to make the experience more smooth.
-- I want to add a role-system. Currently it already exists in the database, but
-  is not used at all. This would allow some administrative actions without
-  needing to do so through `psql` manually.
-  - There is also a flag in the database for a deleted user, but it is not
-    currently used. The idea is that a user could be "soft-deleted" through the
-    admin-interface, so that they, their videos, comments or ratings are no
-    longer visible. The user could still be re-instated if so desired.
-- It would be useful, if the user could delete their videos after they have been
-  uploaded.
-- I would like to add the possibility of editing video titles and descriptions
-  even after they have been uploaded.
-- Playlists and rating comments from the wanted features are also still missing,
-  I would like to see those.
-- If I have the time, email notifications would be a nice addition as well.
+- This section has been replaced with the Todos since Välipalautus 2. It
+  contains mostly the same things, but it's formatted in a list-format and has more details.
 
 ## Minimum Viable Product:
 Minimum viable product for this use case means basically a simple and ugly
