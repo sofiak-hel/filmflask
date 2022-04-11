@@ -17,7 +17,7 @@
     <meta name="csrf" content="{{ csrf_token }}">
 </head>
 
-<body>
+<body onload="onload()">
     {% include 'components/header.html' %}
     <div class="content">
         <video autoplay="true" src="/video/{{ video.video_id }}" controls=true></video>

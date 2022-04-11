@@ -1,3 +1,15 @@
+
+function onload() {
+    const video = document.getElementsByTagName('video')[0];
+    const volume = localStorage.getItem('volume');
+    if (volume != null)
+        video.volume = volume;
+
+    video.addEventListener('volumechange', (e) => {
+        localStorage.setItem('volume', e.target.volume);
+    });
+}
+
 async function thumbsup(video_id) {
     let res;
     if (curr_rating === 1) {
