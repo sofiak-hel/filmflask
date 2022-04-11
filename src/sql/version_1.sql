@@ -1,5 +1,11 @@
 create extension if not exists "uuid-ossp";
 
+create table if not exists schema_version (
+    onerow boolean primary key default true,
+    version integer not null
+);
+insert into schema_version (version) values (1) on conflict do nothing;
+
 create table if not exists roles (
     role_id serial primary key,
     role_name text not null,

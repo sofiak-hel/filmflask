@@ -1,4 +1,5 @@
 {
+    "get_schema_version": "select version from schema_version",
     "create_user": "insert into users (handle, nickname, password_hash) values (:handle, :nickname, :password_hash)",
     "find_user": "select * from users where user_id = :user_id",
     "find_user_handle": "select * from users where handle = :handle",
