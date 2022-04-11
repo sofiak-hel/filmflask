@@ -26,7 +26,7 @@
     "create_csrf_token": "insert into csrf_tokens (session_id) values (:session_id) returning *",
     "clear_csrf_tokens": "delete from csrf_tokens where expiration <= now()",
     "get_csrf_token": "select * from csrf_tokens where csrf_token = :csrf_token and expiration > now()",
-    "reupload_video": "update videos set blob = :blob where video_id = :video_id",
+    "reupload_video": "update videos set blob = :blob, thumbnail_id = :thumbnail_id where video_id = :video_id",
     "subscribe": "insert into subscriptions (user_id, subscribed_id) values (:user_id, :subscribed_id)",
     "check_subscription": "select * from subscriptions where user_id = :user_id and subscribed_id = :subscribed_id",
     "unsubscribe": "delete from subscriptions where user_id = :user_id and subscribed_id = :subscribed_id",

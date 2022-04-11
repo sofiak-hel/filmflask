@@ -11,7 +11,7 @@ def process_image(blob: bytes, flags="bilinear", **kwargs):
         .input('pipe:', **kwargs)
         .filter_("crop", "min(iw,ih)", "min(iw,ih)")
         .filter_('scale', 250, 250, flags=flags)
-        .output('pipe:', format="image2pipe", vcodec="mjpeg", pix_fmt="rgba")
+        .output('pipe:', format="image2pipe", vcodec="mjpeg")
         .run_async(pipe_stdout=True, pipe_stdin=True)
     )
     process.stdin.write(blob)

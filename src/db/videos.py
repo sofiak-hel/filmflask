@@ -104,7 +104,7 @@ class Video(VideoListing):
     def upload(user: AuthUser, title: str, description: str, blob: bytes) -> Optional['Image']:
         blob = process_video(blob)
         thumbnail_blob = create_thumbnail(blob)
-        thumbnail = Image.upload(thumbnail_blob, "image/jpeg")
+        thumbnail = Image.upload(thumbnail_blob, "image/jpeg", False)
         res = create_video(user.user_id,  title, description, Binary(blob),
                            "video/mp4", thumbnail.image_id)
         if res is not None:
@@ -128,11 +128,18 @@ class Video(VideoListing):
 
     @staticmethod
     def reprocess_all():
-        videos = [Video(v) for v in all_videos_with_blob()]
+        res = all_videos_with_blob()
+        if res is None:
+            raise Error('Failed to fetch videos, can not reprocess')
+        videos = [Video(v) for v in res]
 
         for video in videos:
+            old_thumbnail = video.thumbnail_id
             new_blob = process_video(video.blob)
-            update_video(video.video_id, new_blob)
+            thumbnail_blob = create_thumbnail(new_blob)
+            new_thumbnail = Image.upload(thumbnail_blob, "image/jpeg", False)
+            reupload_video(video.video_id, new_blob, new_thumbnail.image_id)
+            Image.delete(old_thumbnail)
 
     def getBuffer(self) -> IOBase:
         return BytesIO(self.blob)
@@ -218,11 +225,12 @@ def add_download(video_id: UUID) -> bool:
         return False
 
 
-def update_video(video_id: UUID, blob: bytes) -> bool:
+def reupload_video(video_id: UUID, blob: bytes, thumbnail_id: UUID) -> bool:
     try:
         res = db.session.execute(sql["reupload_video"], {
             "video_id": video_id,
-            "blob": blob
+            "blob": blob,
+            "thumbnail_id": thumbnail_id,
         })
         db.session.commit()
         return True

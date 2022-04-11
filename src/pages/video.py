@@ -161,10 +161,3 @@ def rate_video(rating: int, video_id: Optional[UUID]):
         return redirect("/watch/%s" % video_id)
     else:
         return error("Failed to rate video!")
-
-
-# Enable for reprocessing
-# @video_bp.route("/reprocess")
-# def reprocess():
-#     Video.reprocess_all()
-#     return "Reprocessed!"
