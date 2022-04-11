@@ -12,7 +12,7 @@ from datetime import time
 from db.db import db, sql
 from db.users import BaseUser, AuthUser
 from db.images import Image
-from util import process_video, create_thumbnail
+from ffmpeg_util import process_video, create_thumbnail
 
 
 class VideoListing:
@@ -128,7 +128,7 @@ class Video(VideoListing):
 
     @staticmethod
     def reprocess_all():
-        videos = Video.search()
+        videos = [Video(v) for v in all_videos_with_blob()]
 
         for video in videos:
             new_blob = process_video(video.blob)
@@ -159,6 +159,14 @@ def create_video(user_id: int, title: str, description: str, blob: bytes, conten
 def all_videos() -> Optional[list[dict]]:
     try:
         return db.session.execute(sql["all_videos"]).fetchall()
+    except Exception as e:
+        print(e)
+        return None
+
+
+def all_videos_with_blob() -> Optional[list[dict]]:
+    try:
+        return db.session.execute(sql["all_videos_with_blob"]).fetchall()
     except Exception as e:
         print(e)
         return None

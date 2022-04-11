@@ -1,4 +1,4 @@
-
+from flask import current_app
 from io import BytesIO, IOBase
 from argon2 import PasswordHasher
 from typing import Optional
@@ -7,9 +7,12 @@ from datetime import time
 from typing import Optional
 from psycopg2 import Binary
 from uuid import UUID
+import random
+import math
+import itertools
 
 from db.db import db, sql
-from util import process_image
+from ffmpeg_util import process_image
 
 
 class Image:
@@ -19,7 +22,7 @@ class Image:
         self.blob: bytes = blob
 
     @staticmethod
-    def upload(blob: bytes, content_type: str = "image/png") -> Optional['Image']:
+    def upload(blob: bytes, content_type: str = "image/jpg") -> Optional['Image']:
         res = create_image(content_type, blob)
         if res is None:
             return None
@@ -43,6 +46,28 @@ class Image:
     @staticmethod
     def delete(image_id) -> bool:
         return delete_image(image_id)
+
+    @staticmethod
+    def generate_avatar() -> Optional['Image']:
+        size = 8
+
+        color1 = [random.randint(0, 255) for i in range(0, 3)]
+        color2 = [random.randint(0, 255) for i in range(0, 3)]
+
+        l: list[int] = []
+        for y in range(0, size):
+            row = []
+            for x in range(0, math.floor(size / 2)):
+                if random.randint(0, 1) == 1:
+                    row.append(color1)
+                else:
+                    row.append(color2)
+            row.extend(row[::-1])
+            l.extend(itertools.chain(*row))
+
+        blob = process_image(bytes(l), flags="neighbor", format="rawvideo",
+                             pix_fmt="rgb24", s="%sx%s" % (size, size))
+        return Image.upload(blob)
 
     def getBuffer(self) -> IOBase:
         return BytesIO(self.blob)

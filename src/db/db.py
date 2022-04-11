@@ -2,6 +2,7 @@
 from flask_sqlalchemy import SQLAlchemy
 import json
 from os import path
+from typing import Callable, Optional
 
 sql = {}
 with open("sql/shorts.json") as f:
@@ -10,7 +11,7 @@ with open("sql/shorts.json") as f:
 db = SQLAlchemy()
 
 
-def init_db(app):
+def init_db(app, pre_migration: list[Optional[Callable]]):
     db.app = app
     db.init_app(app)
 
@@ -20,8 +21,9 @@ def init_db(app):
             raise Exception(
                 "Function for version %s has not been specified!" % schema_version)
         with open("sql/version_%s.sql" % schema_version) as file:
-            if pre_migration[schema_version - 1]:
-                pre_migration[schema_version - 1]()
+            fn = pre_migration[schema_version - 1]
+            if fn is not None:
+                fn()
             print("Performing version %s migration!" % schema_version)
             db.engine.execute(file.read())
         schema_version += 1
@@ -36,10 +38,3 @@ def get_schema_version() -> int:
     except Exception as e:
         print(e)
         return 0
-
-
-def ver2_migration():
-    print("Performing the version 2 migration python code!")
-
-
-pre_migration = [None]

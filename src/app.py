@@ -8,6 +8,8 @@ from pages.index import index_bp
 from pages.user import user_bp
 from pages.video import video_bp
 from db.db import init_db
+from os import path
+from migration import pre_migration
 
 
 app = Flask(__name__)
@@ -34,4 +36,5 @@ app.register_blueprint(index_bp)
 app.register_blueprint(user_bp)
 app.register_blueprint(video_bp)
 
-init_db(app)
+
+init_db(app, pre_migration)

@@ -7,6 +7,7 @@ from typing import Optional
 from uuid import UUID
 
 from db.db import db, sql
+from db.images import Image
 
 hasher = PasswordHasher()
 
@@ -32,6 +33,27 @@ class BaseUser:
         if res is None:
             return None
         return BaseUser(res)
+
+    @staticmethod
+    def reprocess_all_avatars() -> bool:
+        res = all_users()
+        if res is None:
+            return False
+        users = [BaseUser(r) for r in res]
+        for user in users:
+            if user.avatar_id is None:
+                avatar = Image.generate_avatar()
+                if not update_user(user.user_id, user.nickname,
+                                   user.bio, avatar.image_id):
+                    return False
+            else:
+                original = Image.from_id(user.avatar_id)
+                Image.delete(user.avatar_id)
+                new_avatar = Image.upload(original.blob)
+                if not update_user(user.user_id, user.nickname,
+                                   user.bio, new_avatar.image_id):
+                    return False
+        return True
 
     def update(self, nickname: Optional[str] = None, bio: Optional[str] = None, avatar_id: Optional[UUID] = None):
         self.nickname = nickname or self.nickname
@@ -87,8 +109,13 @@ class AuthUser(BaseUser):
         return None
 
     @staticmethod
-    def register(handle: str, nickname: str, password: str):
-        return create_user(handle, nickname, password)
+    def register(handle: str, nickname: str, password: str) -> bool:
+        avatar = Image.generate_avatar()
+        user = create_user(handle, nickname, password, avatar.image_id)
+        if not user:
+            Image.delete(avatar.image_id)
+            return False
+        return True
 
     @staticmethod
     def validate_session(session: dict) -> bool:
@@ -130,13 +157,14 @@ class AuthUser(BaseUser):
         return "%s (@%s). Bio: %s, avatar_id: %s." % (self.nickname, self.handle, self.bio, self.avatar_id)
 
 
-def create_user(handle: str, nickname: str, password: str) -> bool:
+def create_user(handle: str, nickname: str, password: str, avatar_id: UUID) -> bool:
     try:
         password_hash = hasher.hash(password)
         db.session.execute(sql["create_user"], {
             "handle": handle,
             "nickname": nickname,
-            "password_hash": password_hash
+            "password_hash": password_hash,
+            "avatar_id": avatar_id
         })
         db.session.commit()
         return True
@@ -151,6 +179,14 @@ def find_user(user_id: int) -> Optional[dict]:
             "user_id": user_id
         })
         return result.fetchone()
+    except Exception as e:
+        print(e)
+        return None
+
+
+def all_users() -> Optional[list[dict]]:
+    try:
+        return db.session.execute(sql["all_users"]).fetchall()
     except Exception as e:
         print(e)
         return None
