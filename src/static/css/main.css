@@ -12,6 +12,7 @@
     --accent-color: #f74716;
     --accent-color-hover: #d02000;
     --accent-color-active: #c01000;
+    --content-width: 70%;
 
     accent-color: var(--accent-color);
 
@@ -21,6 +22,30 @@
     background-color: #222;
     color: white;
 }
+
+
+
+@media (max-width: 900px) {
+    :root {
+        --content-width: 95% !important;
+    }
+
+    header {
+        grid-template-columns: 1fr !important;
+        text-align: center;
+    }
+
+    header .search,
+    header .me {
+        display: none !important;
+    }
+}
+
+video {
+    width: calc(min(1000px, 100%));
+    padding-bottom: 0.5rem;
+}
+
 
 body {
     min-height: 100%;
@@ -138,14 +163,14 @@ header .search input {
 .content {
     padding: 0.5em;
     padding-top: 4rem;
-    width: 70%;
+    width: var(--content-width);
     margin: auto;
     padding-bottom: 5rem;
 }
 
 .content .video-list {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
 }
 
 .video {
@@ -214,7 +239,7 @@ img {
 .video-details {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    width: 854px;
+    width: calc(min(1000px, 100%));
 }
 
 .video-details .ratings {
