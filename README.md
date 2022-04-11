@@ -45,7 +45,7 @@ around 200 videos of max size into the database.
   add more CSS and use more JavaScript to make the experience more smooth.
     - CSS has been slightly improved, and the user-experience as a whole has
       been improved by quite a bit with a little bit of javascript
-- [ ] Default avatars for users. Unsure if this should be done client-side or
+- [X] Default avatars for users. Unsure if this should be done client-side or
   serverside.
 - [ ] It would be useful, if the user could delete their videos after they have been
   uploaded.
