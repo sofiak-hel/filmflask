@@ -19,50 +19,80 @@
 
 <body onload="onload()">
     {% include 'components/header.html' %}
+    <dialog class="modal" id="delete-dialog">
+        <p>You are about to delete the video. Proceed?</p>
+        <form method="dialog">
+            <button class="button">No, nevermind!</button>
+            <button class="button warning" id="delete-video" data-videoid="{{ video.video_id }}">Delete video</button>
+        </form>
+    </dialog>
+    <dialog class="modal" id="error-dialog">
+        <p class="error-message">You are about to delete the video. Proceed?</p>
+        <form method="dialog">
+            <button class="button">Ok</button>
+        </form>
+    </dialog>
     <div class="content">
         <video autoplay="true" src="/video/{{ video.video_id }}" controls=true></video>
-        <h1>{{ video.title }}</h1>
-        <div class="video-details">
-            <div>
-                <span class="views">{{ video.download_counter }} views</span> <span class="timestamp">{{
-                    video.upload_time
-                    }}</span>
+        <form action="/video/edit/{{ video.video_id }}" method="post" class="">
+            {% include 'components/csrf_token.html' %}
+            <input hidden type="text" name="title" value="{{ video.title }}" class="title">
+            <h1 id="title" class="title">{{ video.title }}</h1>
+            <div class="video-details">
+                <div>
+                    <span class="views">{{ video.download_counter }} views</span> <span class="timestamp">{{
+                        video.upload_time
+                        }}</span>
+                </div>
+                {% set ratings = video.get_ratings() %}
+
+                <div class="ratings">
+                    <span><button type="button" class="icon-button" {% if not me %} disabled="true" {% endif %}
+                            id="thumbsup-button" data-videoid="{{ video.video_id }}">
+                            {% if rating == 1 %}
+                            <i id="thumbsup-icon" class="fa fa-thumbs-up fa-lg"></i>
+                            {% else %}
+                            <i id="thumbsup-icon" class="fa fa-thumbs-o-up fa-lg"></i>
+                            {% endif %}
+                        </button>
+                        <span id="thumbsups">{{ ratings[0] }}</span>
+                    </span>
+                    <span><button type="button" class="icon-button" {% if not me %} disabled="true" {% endif %}
+                            id="thumbsdown-button" data-videoid="{{ video.video_id }}">
+                            {% if rating == -1 %}
+                            <i id="thumbsdown-icon" class="fa fa-thumbs-down fa-lg"></i>
+                            {% else %}
+                            <i id="thumbsdown-icon" class="fa fa-thumbs-o-down fa-lg"></i>
+                            {% endif %}
+                        </button>
+                        <span id="thumbsdowns">{{ ratings[1] }}</span>
+                    </span>
+                </div>
             </div>
-            {% set ratings = video.get_ratings() %}
 
-            <div class="ratings">
-                <span><button class="icon-button" {% if not me %} disabled="true" {% endif %}
-                        onclick="thumbsup('{{video.video_id}}')">
-                        {% if rating == 1 %}
-                        <i id="thumbsup-icon" class="fa fa-thumbs-up fa-lg"></i>
-                        {% else %}
-                        <i id="thumbsup-icon" class="fa fa-thumbs-o-up fa-lg"></i>
-                        {% endif %}
-                    </button>
-                    <span id="thumbsups">{{ ratings[0] }}</span>
-                </span>
-                <span><button class="icon-button" {% if not me %} disabled="true" {% endif %}
-                        onclick="thumbsdown('{{video.video_id}}')">
-                        {% if rating == -1 %}
-                        <i id="thumbsdown-icon" class="fa fa-thumbs-down fa-lg"></i>
-                        {% else %}
-                        <i id="thumbsdown-icon" class="fa fa-thumbs-o-down fa-lg"></i>
-                        {% endif %}
-                    </button>
-                    <span id="thumbsdowns">{{ ratings[1] }}</span>
-                </span>
+
+            <div class="user-tag">
+                <a href="/user/{{ video.uploader.handle }}">
+                    {% set user = video.uploader %}
+                    {% include 'components/user-detail.html' %}
+                </a>
             </div>
-        </div>
 
+            <textarea hidden class="video-description" name="description"
+                maxlength="{{ config.BIO_MAX_LENGTH }}">{{ video.description }}</textarea>
+            <p class="video-description" id="description">{{ video.description }}</p>
 
-        <div class="user-tag">
-            <a href="/user/{{ video.uploader.handle }}">
-                {% set user = video.uploader %}
-                {% include 'components/user-detail.html' %}
-            </a>
-        </div>
-
-        <p class="video-description">{{ video.description }}</p>
+            {% if video.user_id == me.user_id %}
+            <div id="editing-buttons" hidden>
+                <input type="submit" class="button" value="Save changes">
+                <button type="button" class="button" id="cancel-changes">Cancel</button>
+                <button type="button" class="button warning" id="delete-video-modal">Delete video</button>
+            </div>
+            <div id="not-editing-buttons">
+                <button type="button" class="button" id="edit-video">Edit</button>
+            </div>
+            {% endif %}
+        </form>
 
         <div class="comment-section">
             {% if me %}

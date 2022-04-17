@@ -12,6 +12,9 @@
     --accent-color: #f74716;
     --accent-color-hover: #d02000;
     --accent-color-active: #c01000;
+    --warning-color: #cc0a00;
+    --warning-color-hover: #9e1a13;
+    --warning-color-active: #7a1b16;
     --content-width: 70%;
 
     accent-color: var(--accent-color);
@@ -297,6 +300,32 @@ button.icon-button:not([disabled]):active {
 
 .video-description {
     margin: 1rem;
+    width: calc(min(1000px, 100%) - 1rem);
+}
+
+.title {
+    font-size: 2rem;
+}
+
+.modal {
+    position: fixed;
+    margin: auto;
+    padding: 1rem;
+    text-align: center;
+    background-color: var(--main-bg);
+    color: var(--main-text)
+}
+
+.button.warning {
+    background-color: var(--warning-color);
+}
+
+.button.warning:hover {
+    background-color: var(--warning-color-hover);
+}
+
+.button.warning:active {
+    background-color: var(--warning-color-active);
 }
 
 .timestamp {
@@ -374,12 +403,12 @@ input[type="password"],
 }
 
 .error-message {
-    background: #c8312a;
+    background: var(--warning-color);
     padding: 0.5em;
-    padding-left: 0.5em;
     border-radius: 1em;
     margin: 0.5em;
     padding-left: 2em;
+    padding-right: 2em;
     font-weight: bold;
     text-align: center;
 }

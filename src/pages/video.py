@@ -47,6 +47,20 @@ def video_get(video_id):
         return send_file(video.getBuffer(), video.content_type)
 
 
+@video_bp.route("/video/<uuid:video_id>", methods=["DELETE"])
+@csrf_token_required()
+@auth_required()
+def video_delete(video_id):
+    return error('Not yet implemented!')
+
+
+@video_bp.route("/video/edit/<uuid:video_id>", methods=["POST"])
+@csrf_token_required()
+@auth_required()
+def video_edit(video_id):
+    return error('Not yet implemented!')
+
+
 @video_bp.route("/watch/<uuid:video_id>")
 def watch(video_id):
     me = AuthUser.from_session(session)
@@ -91,7 +105,7 @@ def delete_comment():
         return error("No comment id specified!")
     video_id = me.delete_comment(comment_id)
     if video_id:
-        return redirect("/watch/%s" % video_id)
+        return jsonify("Success")
     else:
         return error("Failed to delete comment!")
 
@@ -110,7 +124,7 @@ def thumbsdown():
     return rate_video(-1, request.form.get("video_id", None))
 
 
-@video_bp.route("/rate/delete", methods=["POST"])
+@video_bp.route("/rate", methods=["DELETE"])
 @csrf_token_required()
 @auth_required()
 def unrate():
@@ -121,7 +135,7 @@ def unrate():
         return error("Failed to get video id!")
 
     if me.unrate_video(video_id):
-        return redirect("/watch/%s" % video_id)
+        return jsonify("Success")
     else:
         return error("Failed to rate video!")
 
@@ -158,6 +172,6 @@ def rate_video(rating: int, video_id: Optional[UUID]):
         return error("Failed to get video id!")
 
     if me.rate_video(video_id, rating):
-        return redirect("/watch/%s" % video_id)
+        return jsonify("Success")
     else:
         return error("Failed to rate video!")
