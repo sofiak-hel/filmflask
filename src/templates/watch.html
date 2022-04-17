@@ -86,7 +86,7 @@
                 placeholder="Up to {{ config.VIDEO_DESC_MAX_LENGTH}} characters">{{ video.description }}</textarea>
             <p class="video-description" id="description">{{ video.description }}</p>
 
-            {% if video.user_id == me.user_id %}
+            {% if auth.can_delete_video(video) %}
             <div id="editing-buttons" hidden>
                 <input type="submit" class="button" value="Save changes">
                 <button type="button" class="button" id="cancel-changes">Cancel</button>

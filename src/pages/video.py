@@ -63,7 +63,7 @@ def video_get(video_id):
 def video_delete(video_id):
     me = AuthUser.from_session(session)
     auth = Auth(me)
-    if auth.can_delete_video(video_id):
+    if auth.can_delete_video(Video.from_id(video_id)):
         if Video.delete(video_id):
             return jsonify("Success")
         return error('Failed to delete video')
@@ -75,15 +75,19 @@ def video_delete(video_id):
 @auth_required()
 def video_edit(video_id):
     me = AuthUser.from_session(session)
-    title = request.form.get("title", "").strip()
-    description = request.form.get("description", "").strip()
-    err = check_title_and_desc(
-        title, description, "/watch/%s" % video_id)
-    if err is not None:
-        return err
-    if Video.edit(title, description, video_id, me.user_id):
-        return redirect("/watch/%s" % video_id)
-    return error('Failed to edit video')
+    auth = Auth(me)
+
+    if auth.can_delete_video(Video.from_id(video_id)):
+        title = request.form.get("title", "").strip()
+        description = request.form.get("description", "").strip()
+        err = check_title_and_desc(
+            title, description, "/watch/%s" % video_id)
+        if err is not None:
+            return err
+        if Video.edit(title, description, video_id):
+            return redirect("/watch/%s" % video_id)
+        return error('Failed to edit video')
+    return error("You don't have the right, O' you don't have the right.")
 
 
 @video_bp.route("/watch/<uuid:video_id>")

@@ -56,8 +56,8 @@ class VideoListing:
         return videos
 
     @staticmethod
-    def edit(title: str, description: str, video_id: UUID, user_id: int) -> bool:
-        return edit_video(title, description, user_id, video_id)
+    def edit(title: str, description: str, video_id: UUID) -> bool:
+        return edit_video(title, description, video_id)
 
     @staticmethod
     def delete(video_id: UUID) -> bool:
@@ -185,10 +185,9 @@ def create_video(user_id: int, title: str, description: str, blob: bytes, conten
         return None
 
 
-def edit_video(title: str, description: str, user_id: int, video_id: UUID) -> bool:
+def edit_video(title: str, description: str, video_id: UUID) -> bool:
     try:
         res = db.session.execute(sql["edit_video"], {
-            "user_id": user_id,
             "video_id": video_id,
             "title": title,
             "description": description,

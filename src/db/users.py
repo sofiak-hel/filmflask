@@ -8,6 +8,7 @@ from uuid import UUID
 
 from db.db import db, sql
 from db.images import Image
+from db.roles import Roles
 
 hasher = PasswordHasher()
 
@@ -81,6 +82,9 @@ class BaseUser:
         for row in res:
             subs.append(row["user_id"])
         return subs
+
+    def get_role(self) -> 'Roles':
+        return Roles.from_id(self.role_id)
 
 
 class AuthUser(BaseUser):

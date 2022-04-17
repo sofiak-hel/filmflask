@@ -15,8 +15,6 @@ def get_error() -> Optional[str]:
 
 
 def error(error: str, base_url: Optional[str] = None):
-    me = AuthUser.from_session(session)
-
     accept = request.headers.get('accept', None)
     if accept == "application/json":
         err = {
@@ -26,7 +24,7 @@ def error(error: str, base_url: Optional[str] = None):
     session['current_error'] = error
     if base_url is not None:
         return redirect(base_url)
-    return render_template("error.html", me=me)
+    return render_template("error.html",)
 
 
 def csrf_token_required() -> Callable[..., Any]:

@@ -10,6 +10,7 @@
     <div class="content">
         <div class="user">
             {% include 'components/user-detail.html' %}
+            <p class="bubble">{{ user.get_role().role_name }}</p>
             <p>{{ user.bio }}</p>
             <p>Subscribers: {{ user.get_subscribers()|length }}</p>
             {% if me %}
