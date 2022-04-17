@@ -33,10 +33,14 @@
         </form>
     </dialog>
     <div class="content">
+        {% include 'components/error.html' %}
         <video autoplay="true" src="/video/{{ video.video_id }}" controls=true></video>
         <form action="/video/edit/{{ video.video_id }}" method="post" class="">
             {% include 'components/csrf_token.html' %}
-            <input hidden type="text" name="title" value="{{ video.title }}" class="title">
+            <input type="hidden" value="{{ video.video_id }}" name=" video_id">
+            <input hidden type="text" name="title" value="{{ video.title }}" class="title" required
+                minlength="{{ config.VIDEO_TITLE_MIN_LENGTH }}" maxlength="{{ config.VIDEO_TITLE_MAX_LENGTH }}"
+                placeholder="{{ config.VIDEO_TITLE_MIN_LENGTH }} - {{ config.VIDEO_TITLE_MAX_LENGTH }} characters">
             <h1 id="title" class="title">{{ video.title }}</h1>
             <div class="video-details">
                 <div>
@@ -78,8 +82,8 @@
                 </a>
             </div>
 
-            <textarea hidden class="video-description" name="description"
-                maxlength="{{ config.BIO_MAX_LENGTH }}">{{ video.description }}</textarea>
+            <textarea hidden class="video-description" name="description" maxlength="{{ config.VIDEO_DESC_MAX_LENGTH}}"
+                placeholder="Up to {{ config.VIDEO_DESC_MAX_LENGTH}} characters">{{ video.description }}</textarea>
             <p class="video-description" id="description">{{ video.description }}</p>
 
             {% if video.user_id == me.user_id %}

@@ -12,6 +12,14 @@ video_bp = Blueprint('video_page', __name__,
                      template_folder='templates')
 
 
+def check_title_and_desc(title: str, description: str, base: str) -> Optional:
+    if len(title) < current_app.config["VIDEO_TITLE_MIN_LENGTH"] or len(title) > current_app.config["VIDEO_TITLE_MAX_LENGTH"]:
+        return error("Video title must be between %s and %s characters long" % (current_app.config["VIDEO_TITLE_MIN_LENGTH"], current_app.config["VIDEO_TITLE_MAX_LENGTH"]), base)
+    if len(description) < 0 or len(description) > current_app.config["VIDEO_DESC_MAX_LENGTH"]:
+        return error("Video description must be between %s and %s characters long" % (current_app.config["VIDEO_TITLE_MIN_LENGTH"], current_app.config["VIDEO_TITLE_MAX_LENGTH"]), base)
+    return None
+
+
 @video_bp.route("/upload", methods=["GET", "POST"])
 @csrf_token_required()
 @auth_required()
@@ -23,8 +31,9 @@ def video_upload():
     elif request.method == "POST":
         title: str = request.form.get("title", "").strip()
         description: str = request.form.get("description", "").strip()
-        if len(title) < current_app.config["VIDEO_TITLE_MIN_LENGTH"] or len(title) > current_app.config["VIDEO_TITLE_MAX_LENGTH"]:
-            return error("Video title must be between %s and %s characters long" % (current_app.config["VIDEO_TITLE_MIN_LENGTH"], current_app.config["VIDEO_TITLE_MAX_LENGTH"]), "/upload")
+        err = check_title_and_desc(title, description, "/upload")
+        if err is not None:
+            return err
 
         f = request.files.get("video", None)
         if f.filename == '':
@@ -58,6 +67,15 @@ def video_delete(video_id):
 @csrf_token_required()
 @auth_required()
 def video_edit(video_id):
+    me = AuthUser.from_session(session)
+    title = request.form.get("title", "").strip()
+    description = request.form.get("description", "").strip()
+    err = check_title_and_desc(
+        title, description, "/watch/%s" % video_id)
+    if err is not None:
+        return err
+    if Video.edit(title, description, video_id, me.user_id):
+        return redirect("/watch/%s" % video_id)
     return error('Not yet implemented!')
 
 

@@ -55,6 +55,10 @@ class VideoListing:
             videos.append(VideoListing(row))
         return videos
 
+    @staticmethod
+    def edit(title: str, description: str, video_id: UUID, user_id: int) -> bool:
+        return edit_video(title, description, user_id, video_id)
+
     def add_download(self) -> bool:
         self.download_counter += 1
         return add_download(self.video_id)
@@ -161,6 +165,21 @@ def create_video(user_id: int, title: str, description: str, blob: bytes, conten
     except Exception as e:
         print(e)
         return None
+
+
+def edit_video(title: str, description: str, user_id: int, video_id: UUID) -> bool:
+    try:
+        res = db.session.execute(sql["edit_video"], {
+            "user_id": user_id,
+            "video_id": video_id,
+            "title": title,
+            "description": description,
+        })
+        db.session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False
 
 
 def all_videos() -> Optional[list[dict]]:

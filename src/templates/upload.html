@@ -15,15 +15,15 @@
         <form action="/upload" method="post" enctype="multipart/form-data" class="form">
             {% include 'components/csrf_token.html' %}
             <div class="field">
-                <label for="title" minlength="{{ config.VIDEO_TITLE_MIN_LENGTH }}"
-                    maxlength="{{ config.VIDEO_TITLE_MAX_LENGTH }}">Video title: </label>
+                <label for="title">Video title: </label>
                 <input class="font-big" type="text" name="title" id="title" required
+                    minlength="{{ config.VIDEO_TITLE_MIN_LENGTH }}" maxlength="{{ config.VIDEO_TITLE_MAX_LENGTH }}"
                     placeholder="{{ config.VIDEO_TITLE_MIN_LENGTH }} - {{ config.VIDEO_TITLE_MAX_LENGTH }} characters"></br>
             </div>
             <div class="field">
                 <label for="description">Description: </label>
-                <textarea name="description" id="description" maxlength="{{ config.COMMENT_MAX_LENGTH}}" required
-                    placeholder="Up to {{ config.COMMENT_MAX_LENGTH}} characters"></textarea></br>
+                <textarea name="description" id="description" maxlength="{{ config.VIDEO_DESC_MAX_LENGTH}}"
+                    placeholder="Up to {{ config.VIDEO_DESC_MAX_LENGTH}} characters"></textarea></br>
             </div>
             <div class="field">
                 <label for="video" class="button">Select video</label>
