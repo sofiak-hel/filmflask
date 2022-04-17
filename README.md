@@ -49,7 +49,7 @@ around 200 videos of max size into the database.
   serverside.
 - [X] It would be useful, if the user could delete their videos after they have been
   uploaded.
-- [ ] I want to add a role-system. Currently it already exists in the database, but
+- [X] I want to add a role-system. Currently it already exists in the database, but
   is not used at all. This would allow some administrative actions without
   needing to do so through `psql` manually.
   - [ ] There is also a flag in the database for a deleted user, but it is not
@@ -150,6 +150,6 @@ development of the product.
 
 ### Later added wanted features:
 - [X] Delete videos
-- [ ] Role-system
-  - [ ] Add administrative actions for users with said roles
+- [X] Role-system
+  - [X] Add administrative actions for users with said roles
   - [ ] Add possibility to soft-delete a user
