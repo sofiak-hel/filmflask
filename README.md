@@ -41,6 +41,13 @@ As the Heroku database is limited in capacity, the default video size limit is
 5MB, which is more than enough for a lot of videos and is small enough to fit
 around 200 videos of max size into the database.
 
+### Migration and large processing
+For some reason heroku seems to have problems with large requests and long
+migrations. For this reason they are run always on my local machine using the
+remote heroku database. For my personal projects I would use docker-compose and
+a cloud server instead of Heroku, but as I am forced to use this, this is how
+I'm forced to deal with this problem.
+
 ## Progress, features and what is to come:
 
 ### Välipalautus 3
