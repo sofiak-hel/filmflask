@@ -54,6 +54,8 @@ I'm forced to deal with this problem.
 Since Välipalautus 2, a lot has happened:
 
 **In addition to Välipalautus 2 the following functionality exists:**
+- Added proper meta tags to everything, including previews for discord/twitter,
+  and meta-information about the used charset and viewport for mobile users.
 - A lot more CSS and JavaScript has been added to make the user experience
   smoother. 
   - Most requests no longer redirect the users and many of them give the user an
