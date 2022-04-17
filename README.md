@@ -47,7 +47,7 @@ around 200 videos of max size into the database.
       been improved by quite a bit with a little bit of javascript
 - [X] Default avatars for users. Unsure if this should be done client-side or
   serverside.
-- [ ] It would be useful, if the user could delete their videos after they have been
+- [X] It would be useful, if the user could delete their videos after they have been
   uploaded.
 - [ ] I want to add a role-system. Currently it already exists in the database, but
   is not used at all. This would allow some administrative actions without
@@ -149,7 +149,7 @@ development of the product.
 - [ ] Email and notifications via email
 
 ### Later added wanted features:
-- [ ] Delete videos
+- [X] Delete videos
 - [ ] Role-system
   - [ ] Add administrative actions for users with said roles
   - [ ] Add possibility to soft-delete a user
