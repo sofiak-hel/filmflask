@@ -1,5 +1,5 @@
 from flask import Blueprint, redirect, request, session, send_file, current_app, jsonify
-from typing import Optional
+from typing import Optional, Any
 from uuid import UUID
 
 from db.users import AuthUser
@@ -12,7 +12,7 @@ video_bp = Blueprint('video_page', __name__,
                      template_folder='templates')
 
 
-def check_title_and_desc(title: str, description: str, base: str) -> Optional:
+def check_title_and_desc(title: str, description: str, base: str) -> Optional[Any]:
     if len(title) < current_app.config["VIDEO_TITLE_MIN_LENGTH"] or len(title) > current_app.config["VIDEO_TITLE_MAX_LENGTH"]:
         return error("Video title must be between %s and %s characters long" % (current_app.config["VIDEO_TITLE_MIN_LENGTH"], current_app.config["VIDEO_TITLE_MAX_LENGTH"]), base)
     if len(description) < 0 or len(description) > current_app.config["VIDEO_DESC_MAX_LENGTH"]:
@@ -60,7 +60,10 @@ def video_get(video_id):
 @csrf_token_required()
 @auth_required()
 def video_delete(video_id):
-    return error('Not yet implemented!')
+    me = AuthUser.from_session(session)
+    if Video.delete(video_id, me.user_id):
+        return jsonify("Success")
+    return error('Failed to delete video')
 
 
 @video_bp.route("/video/edit/<uuid:video_id>", methods=["POST"])
@@ -76,7 +79,7 @@ def video_edit(video_id):
         return err
     if Video.edit(title, description, video_id, me.user_id):
         return redirect("/watch/%s" % video_id)
-    return error('Not yet implemented!')
+    return error('Failed to edit video')
 
 
 @video_bp.route("/watch/<uuid:video_id>")

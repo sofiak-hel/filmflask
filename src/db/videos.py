@@ -59,6 +59,10 @@ class VideoListing:
     def edit(title: str, description: str, video_id: UUID, user_id: int) -> bool:
         return edit_video(title, description, user_id, video_id)
 
+    @staticmethod
+    def delete(video_id: UUID, user_id: int) -> bool:
+        return delete_video(video_id, user_id)
+
     def add_download(self) -> bool:
         self.download_counter += 1
         return add_download(self.video_id)
@@ -174,6 +178,19 @@ def edit_video(title: str, description: str, user_id: int, video_id: UUID) -> bo
             "video_id": video_id,
             "title": title,
             "description": description,
+        })
+        db.session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+
+def delete_video(video_id: UUID, user_id: int) -> bool:
+    try:
+        res = db.session.execute(sql["delete_video"], {
+            "user_id": user_id,
+            "video_id": video_id,
         })
         db.session.commit()
         return True
