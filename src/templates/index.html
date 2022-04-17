@@ -1,7 +1,9 @@
 <html>
 
 <head>
-    <title>FilmFlask</title>
+    {% set title=FilmFlask %}
+    {% include 'components/meta.html' %}
+
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
 </head>
 

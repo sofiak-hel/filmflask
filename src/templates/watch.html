@@ -1,7 +1,9 @@
 <html>
 
 <head>
-    <title>{{ video.title }}</title>
+    {% set title=video.title %}
+    {% include 'components/meta.html' %}
+
     {% set rating = 0 %}
     {% if me %}
     {% set rating = me.get_rating(video.video_id) %}

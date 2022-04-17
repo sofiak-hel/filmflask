@@ -1,7 +1,9 @@
 <html>
 
 <head>
-    <title>Edit user info</title>
+    {% set title=Edit user info %}
+    {% include 'components/meta.html' %}
+
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
     <script src="{{ url_for('static',filename='js/fileupload.js') }}"></script>
     <script src="{{ url_for('static',filename='js/avatar.js') }}"></script>
