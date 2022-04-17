@@ -56,7 +56,7 @@ around 200 videos of max size into the database.
     currently used. The idea is that a user could be "soft-deleted" through the
     admin-interface, so that they, their videos, comments or ratings are no
     longer visible. The user could still be re-instated if so desired.
-- [ ] I would like to add the possibility of editing video titles and descriptions
+- [X] I would like to add the possibility of editing video titles and descriptions
   even after they have been uploaded.
 - [ ] Playlists and rating comments from the wanted features are also still missing,
   I would like to see those.
@@ -129,7 +129,7 @@ development of the product.
 - [X] User profiles showing their videos and details
 
 ### Wanted features, but not neceassarily included in the MVP:
-- [ ] Editing video titles and descriptions after upload
+- [X] Editing video titles and descriptions after upload
 - [X] View counters (how to measure a view?)
 - [ ] Rating comments
     - Even though this seems like a simple feature, it can actually take up
