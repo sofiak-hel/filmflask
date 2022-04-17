@@ -45,11 +45,11 @@ def unsubscribe(handle):
 @csrf_token_required()
 @auth_required()
 def edit_user():
-    user = AuthUser.from_session(session)
     if request.method == "GET":
-        return render_template("user_edit.html", me=user, config=current_app.config)
+        return render_template("user_edit.html", config=current_app.config)
 
     elif request.method == "POST":
+        user = AuthUser.from_session(session)
         nickname: str = request.form.get("nickname", "").strip()
         bio: str = request.form.get("bio", "").strip()
         if len(nickname) > current_app.config["NICKNAME_MAX_LENGTH"] or len(nickname) < current_app.config["NICKNAME_MIN_LENGTH"]:
