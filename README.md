@@ -23,7 +23,10 @@ This project is structured in the following way:
   idempotent sql script that initializes the database and is ran every time the
   program launches. `shorts.json` is a dictionary mapping for all of the sql
   commands used in this project.
+- `src/static` contains all of the `css` and `javascript` of this project in
+  their respective folders.
 - `src/templates` contains all of the `html`-templates used in the project.
+- `src/templates/components` contains all smaller "components" used by the larger sites.
 
 Further documentation _may_ be found within the files themselves.
 
@@ -40,27 +43,56 @@ around 200 videos of max size into the database.
 
 ## Progress, features and what is to come:
 
-## Todo's since Välipalautus 2:
-- [X] Currently the frontend is very clunky to use and very ugly. I would like to
-  add more CSS and use more JavaScript to make the experience more smooth.
-    - CSS has been slightly improved, and the user-experience as a whole has
-      been improved by quite a bit with a little bit of javascript
-- [X] Default avatars for users. Unsure if this should be done client-side or
-  serverside.
-- [X] It would be useful, if the user could delete their videos after they have been
-  uploaded.
-- [X] I want to add a role-system. Currently it already exists in the database, but
-  is not used at all. This would allow some administrative actions without
-  needing to do so through `psql` manually.
-  - [ ] There is also a flag in the database for a deleted user, but it is not
-    currently used. The idea is that a user could be "soft-deleted" through the
-    admin-interface, so that they, their videos, comments or ratings are no
-    longer visible. The user could still be re-instated if so desired.
-- [X] I would like to add the possibility of editing video titles and descriptions
-  even after they have been uploaded.
-- [ ] Playlists and rating comments from the wanted features are also still missing,
-  I would like to see those.
-- [ ] If I have the time, email notifications would be a nice addition as well.
+### Välipalautus 3
+Since Välipalautus 2, a lot has happened:
+
+**In addition to Välipalautus 2 the following functionality exists:**
+- A lot more CSS and JavaScript has been added to make the user experience
+  smoother. 
+  - Most requests no longer redirect the users and many of them give the user an
+  informative pop-up if something goes wrong. The error pages have also been
+  vastly improved.
+  - Javascript has also been added to "remember" the volume level you had on
+    your last video.
+  - The mobile interface has been vastly improved, but it is still quite
+    work-in-progress, as this project is first and foremost intended for desktop
+    audiences.
+  - New styling also makes use of forkawesome icons, which look good.
+  - Footer has also been added, that links to the repository of this project.
+- Users have default avatars that are generated for them when they first create
+  their user. This is done by manually generating an array of bytes and then
+  passing it to ffmpeg to process it to a jpeg image.
+- Some sort of migration system has also been created where the program
+  automatically checks for the current version of the schema and then runs said
+  upgrade scripts automatically so that it can continue functionality as normal.
+    - For example, this functionality adds default avatars to users with no avatars
+- Videos can be edited and deleted after they have been uploaded
+  - Doing so can be achieved via the video's own `/watch`-page by anyone who has
+    the proper access to editing or deleting it.
+  - Currently only the title and the description of the video can be edited.
+  - Editing and deleting require the same role, or for you to be the uploader.
+- There is now a proper authorization system that checks weather a user is
+  authorized to do something.
+  - Currently this only supports deleting comments and editing/deleting videos.
+  - There are two roles by default, admin which can do anything and user that
+    can do nothing.
+  - Roles can not be edited via the front-end and must be done via `psql` for
+    the time being.
+  - This feature can be hard to demonstrate because of the security risks on
+    heroku. If you feel the need to do so, please clone and run the project for
+    yourself using the provided docker compose file.
+
+**What I still would like to see implemented:**
+- [ ] Making the `/subbox` more prevalent and at least having a link to it would
+  certainly be a nice addition.
+- [ ] I would like to see playlists exist before the final turn-in.
+- [ ] Rating comments would be really good to see as well. I feel like they are somewhat important
+- [ ] It would probably be good, if the uploader of the video could delete
+  comments from it, if desired.
+- [ ] The mobile interface still requires a lot of work. It would be great to see that as well.
+- [ ] It would be very useful if assigning roles and editing them would be
+  possible from the frontend as well.
+- [ ] Soft-deleting users from the front-end could be useful.
 
 ### Välipalautus 2
 By Välipalautus 2 the project is looking pretty good already. 
@@ -101,10 +133,6 @@ By Välipalautus 2 the project is looking pretty good already.
     under the `/subbox`-page
 - Users are able to search videos from the front page, they do not need to be
   logged in to do so.
-
-**What I would still like add or modify:**
-- This section has been replaced with the Todos since Välipalautus 2. It
-  contains mostly the same things, but it's formatted in a list-format and has more details.
 
 ## Minimum Viable Product:
 Minimum viable product for this use case means basically a simple and ugly
