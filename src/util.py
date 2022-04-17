@@ -4,6 +4,7 @@ from functools import wraps
 
 from db.csrf import CSRFToken
 from db.users import AuthUser
+from db.auth import Auth
 
 
 def get_error() -> Optional[str]:
@@ -52,5 +53,9 @@ def auth_required(methods: list[str] = ["POST", "GET", "DELETE", "PATCH"]) -> Ca
 
 def render_template(template: str, **kwargs):
     csrf_token = CSRFToken.from_session(session)
+    me = AuthUser.from_session(session)
+    auth = Auth(None)
+    if me is not None:
+        auth = Auth(me)
     error = get_error()
-    return flask_template(template, error=error, csrf_token=None if csrf_token is None else csrf_token.csrf_token, **kwargs)
+    return flask_template(template, me=me, auth=auth, error=error, csrf_token=None if csrf_token is None else csrf_token.csrf_token, **kwargs)

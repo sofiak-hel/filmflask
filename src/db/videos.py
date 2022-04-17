@@ -60,8 +60,8 @@ class VideoListing:
         return edit_video(title, description, user_id, video_id)
 
     @staticmethod
-    def delete(video_id: UUID, user_id: int) -> bool:
-        return delete_video(video_id, user_id)
+    def delete(video_id: UUID) -> bool:
+        return delete_video(video_id)
 
     def add_download(self) -> bool:
         self.download_counter += 1
@@ -101,6 +101,20 @@ class Comment:
         self.timestamp: time = row["timestamp"]
         self.content: str = row["content"]
         self.user = BaseUser(row)
+
+    @staticmethod
+    def from_id(comment_id: int) -> Optional['Comment']:
+        res = get_comment(comment_id)
+        if res is None:
+            return None
+        return Comment(res)
+
+    @staticmethod
+    def delete_comment(comment_id: int) -> Optional[UUID]:
+        res = delete_comment(comment_id)
+        if res is None:
+            return None
+        return res["video_id"]
 
 
 class Video(VideoListing):
@@ -186,10 +200,9 @@ def edit_video(title: str, description: str, user_id: int, video_id: UUID) -> bo
         return False
 
 
-def delete_video(video_id: UUID, user_id: int) -> bool:
+def delete_video(video_id: UUID) -> bool:
     try:
         res = db.session.execute(sql["delete_video"], {
-            "user_id": user_id,
             "video_id": video_id,
         })
         db.session.commit()
@@ -304,6 +317,19 @@ def add_comment(video_id: UUID, user_id: int, content: str) -> Optional[dict]:
         return None
 
 
+def get_comment(comment_id: int) -> Optional[dict]:
+    try:
+        res = db.session.execute(sql["get_comment"], {
+            "comment_id": comment_id,
+        })
+        if res is None:
+            return None
+        return res.fetchone()
+    except Exception as e:
+        print(e)
+        return None
+
+
 def get_comments(video_id) -> Optional[list[dict]]:
     try:
         res = db.session.execute(sql["get_comments"], {
@@ -312,6 +338,20 @@ def get_comments(video_id) -> Optional[list[dict]]:
         if res is None:
             return None
         return res.fetchall()
+    except Exception as e:
+        print(e)
+        return None
+
+
+def delete_comment(comment_id: int) -> Optional[dict]:
+    try:
+        res = db.session.execute(sql["delete_comment"], {
+            "comment_id": comment_id,
+        })
+        db.session.commit()
+        if res is None:
+            return None
+        return res.fetchone()
     except Exception as e:
         print(e)
         return None

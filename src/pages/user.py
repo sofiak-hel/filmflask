@@ -12,12 +12,11 @@ user_bp = Blueprint('user_page', __name__,
 
 @user_bp.route("/user/<handle>")
 def user(handle):
-    me = AuthUser.from_session(session)
     user = BaseUser.from_handle(handle)
     if user is None:
         return error("No such user!")
     videos = Video.by_uploaders([user.user_id])
-    return render_template("user.html", user=user, me=me, videos=videos)
+    return render_template("user.html", user=user, videos=videos)
 
 
 @user_bp.route("/subscribe/<handle>", methods=["POST"])

@@ -10,25 +10,20 @@ index_bp = Blueprint('home_page', __name__,
 
 @index_bp.route("/")
 def index():
-    me = AuthUser.from_session(session)
-    videos = Video.search()
-    return render_template("index.html", me=me, videos=videos)
+    return render_template("index.html", videos=Video.search())
 
 
 @index_bp.route("/search")
 def search():
-    me = AuthUser.from_session(session)
     query = request.args.get("query", "").strip()
     if len(query) == 0:
         return redirect("/")
 
-    videos = Video.search(query)
-    return render_template("index.html", me=me, videos=videos)
+    return render_template("index.html", videos=Video.search(query))
 
 
 @index_bp.route("/subbox")
 @auth_required()
 def subbox():
     me = AuthUser.from_session(session)
-    videos = Video.subbox(me.user_id)
-    return render_template("index.html", me=me, videos=videos)
+    return render_template("index.html", videos=Video.subbox(me.user_id))

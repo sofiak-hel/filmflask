@@ -23,7 +23,7 @@
     "search_videos_substr": "select video_id, u.user_id as user_id, content_type, title, description, thumbnail_id, upload_time, download_counter, role_id, handle, nickname, password_hash, bio, avatar_id, deleted from videos v left join users u on u.user_id = v.user_id where lower(v.title) || ' ' || lower(v.description) || ' ' || lower(u.nickname) || ' ' || lower(u.handle) like :search",
     "get_videos_by_uploader": "select video_id, u.user_id as user_id, content_type, title, description, thumbnail_id, upload_time, download_counter, role_id, handle, nickname, password_hash, bio, avatar_id, deleted from videos v left join users u on u.user_id = v.user_id where u.user_id in :user_ids order by v.upload_time desc",
     "edit_video": "update videos set title = :title, description = :description where video_id = :video_id and user_id = :user_id",
-    "delete_video": "delete from videos where video_id = :video_id and user_id = :user_id",
+    "delete_video": "delete from videos where video_id = :video_id",
     "reupload_video": "update videos set blob = :blob, thumbnail_id = :thumbnail_id where video_id = :video_id",
     "inc_video_counter": "update videos set download_counter = download_counter + 1 where video_id = :video_id",
     "create_csrf_token": "insert into csrf_tokens (session_id) values (:session_id) returning *",
@@ -36,10 +36,12 @@
     "get_subbox": "select video_id, u.user_id as user_id, content_type, title, description, thumbnail_id, upload_time, download_counter, role_id, handle, nickname, password_hash, bio, avatar_id, deleted from subscriptions s left join users u on s.subscribed_id = u.user_id left join videos v on u.user_id = v.user_id where s.user_id = :user_id order by v.upload_time desc",
     "get_subscribers": "select user_id from subscriptions where subscribed_id = :user_id",
     "add_comment": "insert into comments (video_id, user_id, content) values (:video_id, :user_id, :content) returning comment_id",
+    "get_comment": "select * from comments c left join users u on c.user_id = u.user_id where comment_id = :comment_id",
     "get_comments": "select * from comments c left join users u on c.user_id = u.user_id where video_id = :video_id order by timestamp desc",
-    "delete_comment_safe": "delete from comments where comment_id = :comment_id and user_id = :user_id returning video_id",
+    "delete_comment": "delete from comments where comment_id = :comment_id returning video_id",
     "rate_video": "insert into video_ratings (video_id, user_id, rating) values (:video_id, :user_id, :rating) on conflict (video_id, user_id) do update set rating = :rating",
     "delete_rating": "delete from video_ratings where video_id = :video_id and user_id = :user_id",
     "get_ratings": "select rating from video_ratings where video_id = :video_id",
-    "get_rating": "select rating from video_ratings where user_id = :user_id and video_id = :video_id"
+    "get_rating": "select rating from video_ratings where user_id = :user_id and video_id = :video_id",
+    "get_roles": "select * from roles where role_id = :role_id"
 }

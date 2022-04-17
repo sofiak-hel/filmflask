@@ -15,6 +15,7 @@ hasher = PasswordHasher()
 class BaseUser:
     def __init__(self, row: dict):
         self.user_id: int = row["user_id"]
+        self.role_id: int = row["role_id"]
         self.handle: str = row["handle"]
         self.nickname: str = row["nickname"]
         self.bio: str = row["bio"]
@@ -134,12 +135,6 @@ class AuthUser(BaseUser):
 
     def check_subscription(self, other_id: int) -> bool:
         return check_subscription(self.user_id, other_id)
-
-    def delete_comment(self, comment_id: int) -> Optional[UUID]:
-        res = delete_comment_safe(comment_id, self.user_id)
-        if res is None:
-            return None
-        return res["video_id"]
 
     def rate_video(self, video_id: UUID, rating: int) -> bool:
         return rate_video(self.user_id, video_id, rating)
@@ -363,21 +358,6 @@ def get_subscribers(user_id: int) -> Optional[list[dict]]:
         if res is None:
             return None
         return res.fetchall()
-    except Exception as e:
-        print(e)
-        return None
-
-
-def delete_comment_safe(comment_id: int, user_id: int) -> Optional[dict]:
-    try:
-        res = db.session.execute(sql["delete_comment_safe"], {
-            "comment_id": comment_id,
-            "user_id": user_id,
-        })
-        db.session.commit()
-        if res is None:
-            return None
-        return res.fetchone()
     except Exception as e:
         print(e)
         return None

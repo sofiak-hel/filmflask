@@ -10,9 +10,9 @@
     </div>
     <p class="comment-content">{{ comment.content }}</p>
     <p class="timestamp">{{ comment.timestamp }}</p>
-    {% if me.user_id == comment.user.user_id %}
+    {% if auth.can_delete_comment(comment) %}
     <div class="delete-button">
-        <button onclick="delete_comment('{{comment.comment_id}}')" class="icon-button"><i
+        <button class="icon-button comment-delete-button" data-commentid="{{comment.comment_id}}" class="icon-button"><i
                 class="fa fa-trash-o fa-lg"></i></button>
     </div>
     {% endif %}

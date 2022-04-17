@@ -21,15 +21,14 @@ function onload() {
         */
     }
 
-    const deleteModalBtm = document.getElementById('delete-video-modal');
-    const deleteVideoBtn = document.getElementById('delete-video');
-    const cancelChangesBtn = document.getElementById('cancel-changes');
-    const editVideoBtn = document.getElementById('edit-video');
+    for (const button of document.getElementsByClassName('comment-delete-button')) {
+        button.addEventListener('click', delete_comment);
+    }
 
     document.getElementById('thumbsup-button').addEventListener('click', thumbs_button);
     document.getElementById('thumbsdown-button').addEventListener('click', thumbs_button);
 
-    deleteModalBtm.addEventListener('click', (e) => {
+    document.getElementById('delete-video-modal').addEventListener('click', (e) => {
         if (typeof deleteDialog.showModal === "function") {
             deleteDialog.showModal();
         } else {
@@ -37,9 +36,9 @@ function onload() {
         }
         e.preventDefault()
     });
-    deleteVideoBtn.addEventListener('click', deleteVideo)
-    editVideoBtn.addEventListener('click', toggleEditing)
-    cancelChangesBtn.addEventListener('click', toggleEditing)
+    document.getElementById('delete-video').addEventListener('click', deleteVideo)
+    document.getElementById('edit-video').addEventListener('click', toggleEditing)
+    document.getElementById('cancel-changes').addEventListener('click', toggleEditing)
 }
 
 function deleteVideo(e) {
@@ -139,11 +138,17 @@ async function add_comment(video_id) {
     document.getElementById(`comments`).innerHTML = comments;
 }
 
-async function delete_comment(comment_id) {
+async function delete_comment(e) {
+    const comment_id = e.target.parentElement.dataset.commentid;
     res = await request('/comment', {
         comment_id,
     }, 'DELETE');
+    if (res.status === 500) {
+        showError((await res.json()).message)
+        return
+    }
     document.getElementById(`comment-${comment_id}`).remove();
+    e.preventDefault();
 }
 
 async function update_ratings(video_id) {
